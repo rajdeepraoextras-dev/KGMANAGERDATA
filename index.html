@@ -1,0 +1,399 @@
+import React, { useState, useEffect } from 'react';
+import { DollarSign, TrendingUp, TrendingDown, User, RefreshCw } from 'lucide-react';
+
+const KhanagoManager = () => {
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzUnvJ9I9k_1T9wdNXgTI1xzo53O2uv-oDiDVBfqEpeioT4Ek7VMQ6XpUeAVdFG-1EX3A/exec';
+  
+  const [expenses, setExpenses] = useState([]);
+  const [riderPayments, setRiderPayments] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const [summary, setSummary] = useState({
+    totalExpenses: 0,
+    totalReceived: 0,
+    sumitTotal: 0,
+    brijeshTotal: 0
+  });
+  
+  const [expenseForm, setExpenseForm] = useState({
+    date: new Date().toISOString().split('T')[0],
+    category: '',
+    amount: '',
+    description: ''
+  });
+  
+  const [paymentForm, setPaymentForm] = useState({
+    date: new Date().toISOString().split('T')[0],
+    rider: 'SUMIT KUMAR',
+    amount: '',
+    notes: ''
+  });
+
+  useEffect(() => {
+    loadAllData();
+  }, []);
+
+  const loadAllData = async () => {
+    setLoading(true);
+    try {
+      await Promise.all([
+        loadExpenses(),
+        loadPayments(),
+        loadSummary()
+      ]);
+    } catch (error) {
+      console.error('Error loading data:', error);
+      setMessage('ERROR LOADING DATA FROM SHEETS');
+    }
+    setLoading(false);
+  };
+
+  const loadExpenses = async () => {
+    try {
+      const response = await fetch(`${SCRIPT_URL}?action=getExpenses`);
+      const result = await response.json();
+      if (result.success) {
+        setExpenses(result.data);
+      }
+    } catch (error) {
+      console.error('Error loading expenses:', error);
+    }
+  };
+
+  const loadPayments = async () => {
+    try {
+      const response = await fetch(`${SCRIPT_URL}?action=getPayments`);
+      const result = await response.json();
+      if (result.success) {
+        setRiderPayments(result.data);
+      }
+    } catch (error) {
+      console.error('Error loading payments:', error);
+    }
+  };
+
+  const loadSummary = async () => {
+    try {
+      const response = await fetch(`${SCRIPT_URL}?action=getSummary`);
+      const result = await response.json();
+      if (result.success) {
+        setSummary(result.data);
+      }
+    } catch (error) {
+      console.error('Error loading summary:', error);
+    }
+  };
+
+  const handleAddExpense = async () => {
+    if (!expenseForm.category || !expenseForm.amount) {
+      setMessage('PLEASE FILL ALL REQUIRED FIELDS');
+      setTimeout(() => setMessage(''), 3000);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const params = new URLSearchParams({
+        action: 'addExpense',
+        date: expenseForm.date,
+        category: expenseForm.category,
+        amount: expenseForm.amount,
+        description: expenseForm.description
+      });
+
+      const response = await fetch(`${SCRIPT_URL}?${params}`);
+      const result = await response.json();
+      
+      if (result.success) {
+        setMessage('EXPENSE ADDED SUCCESSFULLY!');
+        setExpenseForm({
+          date: new Date().toISOString().split('T')[0],
+          category: '',
+          amount: '',
+          description: ''
+        });
+        await loadAllData();
+      } else {
+        setMessage('ERROR: ' + result.message);
+      }
+    } catch (error) {
+      setMessage('ERROR ADDING EXPENSE');
+      console.error('Error:', error);
+    }
+    setLoading(false);
+    setTimeout(() => setMessage(''), 3000);
+  };
+
+  const handleAddPayment = async () => {
+    if (!paymentForm.amount) {
+      setMessage('PLEASE ENTER AMOUNT');
+      setTimeout(() => setMessage(''), 3000);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const params = new URLSearchParams({
+        action: 'addPayment',
+        date: paymentForm.date,
+        rider: paymentForm.rider,
+        amount: paymentForm.amount,
+        notes: paymentForm.notes
+      });
+
+      const response = await fetch(`${SCRIPT_URL}?${params}`);
+      const result = await response.json();
+      
+      if (result.success) {
+        setMessage('PAYMENT ADDED SUCCESSFULLY!');
+        setPaymentForm({
+          date: new Date().toISOString().split('T')[0],
+          rider: 'SUMIT KUMAR',
+          amount: '',
+          notes: ''
+        });
+        await loadAllData();
+      } else {
+        setMessage('ERROR: ' + result.message);
+      }
+    } catch (error) {
+      setMessage('ERROR ADDING PAYMENT');
+      console.error('Error:', error);
+    }
+    setLoading(false);
+    setTimeout(() => setMessage(''), 3000);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-orange-600 to-orange-500 rounded-lg shadow-lg p-6 mb-6">
+          <div className="flex justify-between items-center">
+            <h1 className="text-4xl font-bold text-white tracking-wide">
+              KHANAGO MANAGER DASHBOARD
+            </h1>
+            <button
+              onClick={loadAllData}
+              disabled={loading}
+              className="bg-white text-orange-600 px-4 py-2 rounded-lg font-bold hover:bg-orange-50 transition duration-200 flex items-center gap-2"
+            >
+              <RefreshCw size={20} className={loading ? 'animate-spin' : ''} />
+              REFRESH
+            </button>
+          </div>
+        </div>
+
+        {/* Message Alert */}
+        {message && (
+          <div className={`mb-6 p-4 rounded-lg text-center font-bold ${
+            message.includes('ERROR') ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
+          }`}>
+            {message}
+          </div>
+        )}
+
+        {/* Stats Cards - Only 2 Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-orange-500">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-orange-600 font-bold text-sm">TOTAL EXPENSES</p>
+                <p className="text-3xl font-bold text-gray-800">₹{summary.totalExpenses.toFixed(2)}</p>
+              </div>
+              <TrendingDown className="text-red-500" size={40} />
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-green-600 font-bold text-sm">TOTAL RECEIVED</p>
+                <p className="text-3xl font-bold text-gray-800">₹{summary.totalReceived.toFixed(2)}</p>
+              </div>
+              <TrendingUp className="text-green-500" size={40} />
+            </div>
+          </div>
+        </div>
+
+        {/* Forms Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Add Expense Form */}
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h2 className="text-2xl font-bold text-orange-600 mb-4 flex items-center gap-2">
+              <DollarSign /> ADD EXPENSE
+            </h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">DATE</label>
+                <input
+                  type="date"
+                  value={expenseForm.date}
+                  onChange={(e) => setExpenseForm({...expenseForm, date: e.target.value})}
+                  className="w-full px-4 py-2 border-2 border-orange-300 rounded-lg focus:outline-none focus:border-orange-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">CATEGORY</label>
+                <select
+                  value={expenseForm.category}
+                  onChange={(e) => setExpenseForm({...expenseForm, category: e.target.value})}
+                  className="w-full px-4 py-2 border-2 border-orange-300 rounded-lg focus:outline-none focus:border-orange-500"
+                >
+                  <option value="">SELECT CATEGORY</option>
+                  <option value="FUEL">FUEL</option>
+                  <option value="MAINTENANCE">MAINTENANCE</option>
+                  <option value="SALARY">SALARY</option>
+                  <option value="FOOD">FOOD</option>
+                  <option value="RENT">RENT</option>
+                  <option value="UTILITIES">UTILITIES</option>
+                  <option value="OTHER">OTHER</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">AMOUNT (₹)</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={expenseForm.amount}
+                  onChange={(e) => setExpenseForm({...expenseForm, amount: e.target.value})}
+                  className="w-full px-4 py-2 border-2 border-orange-300 rounded-lg focus:outline-none focus:border-orange-500"
+                  placeholder="ENTER AMOUNT"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">DESCRIPTION</label>
+                <textarea
+                  value={expenseForm.description}
+                  onChange={(e) => setExpenseForm({...expenseForm, description: e.target.value})}
+                  className="w-full px-4 py-2 border-2 border-orange-300 rounded-lg focus:outline-none focus:border-orange-500"
+                  rows="3"
+                  placeholder="ENTER DESCRIPTION"
+                />
+              </div>
+              <button
+                onClick={handleAddExpense}
+                disabled={loading}
+                className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 rounded-lg transition duration-200 disabled:opacity-50"
+              >
+                {loading ? 'SAVING...' : 'ADD EXPENSE'}
+              </button>
+            </div>
+          </div>
+
+          {/* Add Rider Payment Form */}
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h2 className="text-2xl font-bold text-orange-600 mb-4 flex items-center gap-2">
+              <User /> RIDER PAYMENT RECEIVED
+            </h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">DATE</label>
+                <input
+                  type="date"
+                  value={paymentForm.date}
+                  onChange={(e) => setPaymentForm({...paymentForm, date: e.target.value})}
+                  className="w-full px-4 py-2 border-2 border-orange-300 rounded-lg focus:outline-none focus:border-orange-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">RIDER NAME</label>
+                <select
+                  value={paymentForm.rider}
+                  onChange={(e) => setPaymentForm({...paymentForm, rider: e.target.value})}
+                  className="w-full px-4 py-2 border-2 border-orange-300 rounded-lg focus:outline-none focus:border-orange-500"
+                >
+                  <option value="SUMIT KUMAR">SUMIT KUMAR</option>
+                  <option value="BRIJESH GUPTA">BRIJESH GUPTA</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">AMOUNT (₹)</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={paymentForm.amount}
+                  onChange={(e) => setPaymentForm({...paymentForm, amount: e.target.value})}
+                  className="w-full px-4 py-2 border-2 border-orange-300 rounded-lg focus:outline-none focus:border-orange-500"
+                  placeholder="ENTER AMOUNT"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">NOTES</label>
+                <textarea
+                  value={paymentForm.notes}
+                  onChange={(e) => setPaymentForm({...paymentForm, notes: e.target.value})}
+                  className="w-full px-4 py-2 border-2 border-orange-300 rounded-lg focus:outline-none focus:border-orange-500"
+                  rows="3"
+                  placeholder="ENTER NOTES"
+                />
+              </div>
+              <button
+                onClick={handleAddPayment}
+                disabled={loading}
+                className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition duration-200 disabled:opacity-50"
+              >
+                {loading ? 'SAVING...' : 'ADD PAYMENT'}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Recent Transactions */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Recent Expenses */}
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h2 className="text-2xl font-bold text-orange-600 mb-4">RECENT EXPENSES</h2>
+            <div className="space-y-3 max-h-96 overflow-y-auto">
+              {expenses.slice().reverse().slice(0, 10).map((expense, index) => (
+                <div key={index} className="border-l-4 border-orange-400 bg-orange-50 p-4 rounded">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="font-bold text-gray-800">{expense.category}</p>
+                      <p className="text-sm text-gray-600">{expense.description}</p>
+                      <p className="text-xs text-gray-500 mt-1">{expense.date}</p>
+                    </div>
+                    <p className="text-xl font-bold text-red-600">₹{parseFloat(expense.amount).toFixed(2)}</p>
+                  </div>
+                </div>
+              ))}
+              {expenses.length === 0 && (
+                <p className="text-center text-gray-500 py-8">NO EXPENSES RECORDED YET</p>
+              )}
+            </div>
+          </div>
+
+          {/* Recent Payments */}
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h2 className="text-2xl font-bold text-orange-600 mb-4">RECENT PAYMENTS</h2>
+            <div className="space-y-3 max-h-96 overflow-y-auto">
+              {riderPayments.slice().reverse().slice(0, 10).map((payment, index) => (
+                <div key={index} className="border-l-4 border-green-400 bg-green-50 p-4 rounded">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="font-bold text-gray-800">{payment.rider}</p>
+                      <p className="text-sm text-gray-600">{payment.notes}</p>
+                      <p className="text-xs text-gray-500 mt-1">{payment.date}</p>
+                    </div>
+                    <p className="text-xl font-bold text-green-600">₹{parseFloat(payment.amount).toFixed(2)}</p>
+                  </div>
+                </div>
+              ))}
+              {riderPayments.length === 0 && (
+                <p className="text-center text-gray-500 py-8">NO PAYMENTS RECORDED YET</p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-6 text-center text-sm text-gray-600">
+          <p className="font-bold">CONNECTED TO GOOGLE SHEETS ✓</p>
+          <p>ALL DATA IS AUTOMATICALLY SAVED</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default KhanagoManager;
