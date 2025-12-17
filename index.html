@@ -5,10 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>KHANAGO MANAGER DASHBOARD</title>
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:opsz,wght@8..144,300;400;500;600;700&display=swap" rel="stylesheet">
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.js"></script>
     
     <style>
@@ -36,7 +32,8 @@
         }
 
         body {
-            font-family: 'Roboto Serif', serif;
+            /* Font updated to Calibri with fallbacks for mobile */
+            font-family: 'Calibri', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-body);
             color: var(--text-main);
             min-height: 100vh;
@@ -66,16 +63,16 @@
         }
 
         .brand h1 {
-            font-size: 1.5rem;
+            font-size: 1.6rem; /* Slightly larger for Calibri */
             font-weight: 700;
             color: var(--text-main);
             letter-spacing: -0.02em;
         }
 
         .brand span {
-            font-size: 0.875rem;
+            font-size: 0.95rem;
             color: var(--text-muted);
-            font-weight: 500;
+            font-weight: 400;
         }
 
         .refresh-btn {
@@ -128,17 +125,18 @@
         }
 
         .stat-label {
-            font-size: 0.875rem;
+            font-size: 0.95rem;
             opacity: 0.9;
             margin-bottom: 8px;
-            font-weight: 500;
+            font-weight: 400;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
 
         .stat-value {
-            font-size: 2.25rem;
+            font-size: 2.5rem;
             font-weight: 700;
+            line-height: 1.1;
         }
 
         .stat-icon {
@@ -183,8 +181,8 @@
         }
 
         .card-header h2 {
-            font-size: 1.125rem;
-            font-weight: 600;
+            font-size: 1.25rem;
+            font-weight: 700;
             color: var(--text-main);
         }
 
@@ -199,8 +197,8 @@
 
         .form-group label {
             display: block;
-            font-size: 0.75rem;
-            font-weight: 600;
+            font-size: 0.85rem;
+            font-weight: 700;
             color: var(--text-muted);
             margin-bottom: 6px;
             text-transform: uppercase;
@@ -212,10 +210,10 @@
             border: 1px solid #e7e5e4;
             border-radius: 12px;
             font-family: inherit;
-            font-size: 1rem;
+            font-size: 1.05rem; /* Slightly larger text for inputs */
             background: #fafaf9;
             transition: all 0.2s;
-            appearance: none; /* Removes default OS styling */
+            appearance: none;
         }
 
         input:focus, select:focus, textarea:focus {
@@ -236,8 +234,8 @@
             border: none;
             border-radius: 12px;
             font-family: inherit;
-            font-weight: 600;
-            font-size: 1rem;
+            font-weight: 700;
+            font-size: 1.1rem;
             cursor: pointer;
             transition: transform 0.1s;
             display: flex;
@@ -300,12 +298,12 @@
 
         .t-details {
             flex: 1;
-            min-width: 0; /* Text truncation fix */
+            min-width: 0;
         }
 
         .t-title {
-            font-weight: 600;
-            font-size: 0.95rem;
+            font-weight: 700;
+            font-size: 1rem;
             color: var(--text-main);
             white-space: nowrap;
             overflow: hidden;
@@ -313,14 +311,14 @@
         }
 
         .t-subtitle {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
             margin-top: 2px;
         }
 
         .t-amount {
             font-weight: 700;
-            font-size: 1rem;
+            font-size: 1.1rem;
             margin-left: 12px;
             white-space: nowrap;
         }
@@ -338,8 +336,8 @@
             color: white;
             padding: 12px 24px;
             border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: 500;
+            font-size: 0.95rem;
+            font-weight: 400;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 1000;
@@ -362,7 +360,7 @@
             margin-top: 40px;
             text-align: center;
             color: var(--text-muted);
-            font-size: 0.8rem;
+            font-size: 0.85rem;
         }
 
         .status-dot {
@@ -514,7 +512,7 @@
 
         <footer class="footer">
             <p><span class="status-dot"></span>Syncing with Google Sheets</p>
-            <p style="opacity: 0.6; font-size: 0.7rem; margin-top: 4px;">KHANAGO v2.0</p>
+            <p style="opacity: 0.6; font-size: 0.75rem; margin-top: 4px;">KHANAGO v2.0</p>
         </footer>
     </div>
 
@@ -620,8 +618,6 @@
                 return;
             }
 
-            // Using standard JS map instead of Lucide icons inside string literal to avoid rendering issues
-            // We re-render icons after HTML update
             list.innerHTML = expenses.slice().reverse().slice(0, 15).map(exp => `
                 <div class="transaction-item">
                     <div class="t-icon-box exp">
