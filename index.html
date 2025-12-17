@@ -2,480 +2,525 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>KHANAGO MANAGER DASHBOARD</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:opsz,wght@8..144,300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.js"></script>
+    
     <style>
+        :root {
+            --primary: #ea580c;
+            --primary-dark: #c2410c;
+            --primary-light: #fff7ed;
+            --success: #10b981;
+            --success-bg: #ecfdf5;
+            --danger: #ef4444;
+            --danger-bg: #fef2f2;
+            --text-main: #1c1917;
+            --text-muted: #57534e;
+            --bg-body: #fafaf9;
+            --bg-card: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --radius: 16px;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-            background: linear-gradient(to bottom right, #fff7ed, #ffedd5);
+            font-family: 'Roboto Serif', serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
             min-height: 100vh;
-            padding: 24px;
+            padding: 16px;
+            line-height: 1.5;
         }
 
+        /* Container */
         .container {
-            max-width: 1280px;
+            max-width: 1200px;
             margin: 0 auto;
+            padding-bottom: 40px;
         }
 
+        /* Header */
         .header {
-            background: linear-gradient(to right, #ea580c, #f97316);
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            padding: 24px;
-            margin-bottom: 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 24px;
+            padding: 8px 0;
         }
 
-        .header h1 {
-            color: white;
-            font-size: 2rem;
-            font-weight: bold;
-            letter-spacing: 0.05em;
+        .brand {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+        }
+
+        .brand span {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            font-weight: 500;
         }
 
         .refresh-btn {
-            background: white;
-            color: #ea580c;
-            padding: 12px 20px;
-            border-radius: 8px;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
+            background: var(--bg-card);
+            border: 1px solid #e7e5e4;
+            color: var(--text-main);
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            transition: background 0.2s;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: all 0.2s ease;
         }
 
-        .refresh-btn:hover {
-            background: #ffedd5;
+        .refresh-btn:active {
+            transform: scale(0.95);
         }
 
-        .refresh-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .message {
-            padding: 16px;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 24px;
-            display: none;
-        }
-
-        .message.success {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        .message.error {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        .message.show {
-            display: block;
-        }
-
+        /* Stats Grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
+            grid-template-columns: 1fr; /* Mobile First */
+            gap: 16px;
             margin-bottom: 32px;
         }
 
+        @media (min-width: 768px) {
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+        }
+
         .stat-card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background: var(--bg-card);
+            border-radius: var(--radius);
             padding: 24px;
-            border-left: 4px solid;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
 
         .stat-card.expenses {
-            border-left-color: #f97316;
+            background: linear-gradient(135deg, #ea580c 0%, #fb923c 100%);
         }
 
         .stat-card.received {
-            border-left-color: #10b981;
+            background: linear-gradient(135deg, #059669 0%, #34d399 100%);
         }
 
         .stat-label {
             font-size: 0.875rem;
-            font-weight: bold;
+            opacity: 0.9;
             margin-bottom: 8px;
-        }
-
-        .stat-card.expenses .stat-label {
-            color: #ea580c;
-        }
-
-        .stat-card.received .stat-label {
-            color: #059669;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .stat-value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #1f2937;
+            font-size: 2.25rem;
+            font-weight: 700;
         }
 
-        .forms-grid {
+        .stat-icon {
+            position: absolute;
+            right: -10px;
+            bottom: -10px;
+            opacity: 0.2;
+            width: 80px;
+            height: 80px;
+            transform: rotate(-15deg);
+        }
+
+        /* Grid Layout for Forms and Lists */
+        .main-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            grid-template-columns: 1fr;
             gap: 24px;
-            margin-bottom: 32px;
         }
 
-        .form-card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            padding: 24px;
+        @media (min-width: 900px) {
+            .main-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
-        .form-card h2 {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #ea580c;
-            margin-bottom: 16px;
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid #f5f5f4;
+        }
+
+        .card-header {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f5f5f4;
         }
 
+        .card-header h2 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .card-header i {
+            color: var(--primary);
+        }
+
+        /* Forms */
         .form-group {
             margin-bottom: 16px;
         }
 
         .form-group label {
             display: block;
-            font-size: 0.875rem;
-            font-weight: bold;
-            color: #374151;
-            margin-bottom: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
         }
 
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
+        input, select, textarea {
             width: 100%;
-            padding: 10px 16px;
-            border: 2px solid #fed7aa;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.2s;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #f97316;
-        }
-
-        .form-group textarea {
-            resize: vertical;
+            padding: 12px 16px;
+            border: 1px solid #e7e5e4;
+            border-radius: 12px;
             font-family: inherit;
+            font-size: 1rem;
+            background: #fafaf9;
+            transition: all 0.2s;
+            appearance: none; /* Removes default OS styling */
         }
 
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        textarea {
+            resize: none;
+        }
+
+        /* Buttons */
         .submit-btn {
             width: 100%;
             padding: 14px;
             border: none;
-            border-radius: 8px;
-            font-weight: bold;
+            border-radius: 12px;
+            font-family: inherit;
+            font-weight: 600;
             font-size: 1rem;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
         }
 
         .submit-btn.expense {
-            background: #ea580c;
+            background-color: var(--text-main);
             color: white;
-        }
-
-        .submit-btn.expense:hover {
-            background: #c2410c;
         }
 
         .submit-btn.payment {
-            background: #059669;
+            background-color: var(--success);
             color: white;
         }
 
-        .submit-btn.payment:hover {
-            background: #047857;
-        }
-
         .submit-btn:disabled {
-            opacity: 0.5;
+            opacity: 0.6;
             cursor: not-allowed;
         }
 
-        .transactions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 24px;
-        }
-
-        .transaction-card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            padding: 24px;
-        }
-
-        .transaction-card h2 {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #ea580c;
-            margin-bottom: 16px;
-        }
-
+        /* Transaction Lists */
         .transaction-list {
-            max-height: 400px;
+            max-height: 350px;
             overflow-y: auto;
+            padding-right: 4px;
         }
 
         .transaction-item {
-            border-left: 4px solid;
-            padding: 16px;
-            border-radius: 4px;
-            margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f5f5f4;
         }
 
-        .transaction-item.expense {
-            background: #ffedd5;
-            border-left-color: #fb923c;
+        .transaction-item:last-child {
+            border-bottom: none;
         }
 
-        .transaction-item.payment {
-            background: #d1fae5;
-            border-left-color: #34d399;
+        .t-icon-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            flex-shrink: 0;
         }
 
-        .transaction-info {
+        .t-icon-box.exp { background: var(--danger-bg); color: var(--danger); }
+        .t-icon-box.pay { background: var(--success-bg); color: var(--success); }
+
+        .t-details {
             flex: 1;
+            min-width: 0; /* Text truncation fix */
         }
 
-        .transaction-title {
-            font-weight: bold;
-            color: #1f2937;
-            margin-bottom: 4px;
+        .t-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .transaction-desc {
-            font-size: 0.875rem;
-            color: #4b5563;
-            margin-bottom: 4px;
+        .t-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 2px;
         }
 
-        .transaction-date {
-            font-size: 0.75rem;
-            color: #6b7280;
+        .t-amount {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-left: 12px;
+            white-space: nowrap;
         }
 
-        .transaction-amount {
-            font-size: 1.25rem;
-            font-weight: bold;
-            margin-left: 16px;
+        .t-amount.exp { color: var(--danger); }
+        .t-amount.pay { color: var(--success); }
+
+        /* Toast Message */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1c1917;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: max-content;
+            max-width: 90%;
         }
 
-        .transaction-item.expense .transaction-amount {
-            color: #dc2626;
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .toast.error { background: var(--danger); }
+        .toast.success { background: var(--success); }
+
+        /* Footer */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
         }
 
-        .transaction-item.payment .transaction-amount {
-            color: #059669;
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            margin-right: 6px;
         }
+
+        /* Animations */
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .spinning { animation: spin 1s linear infinite; }
 
         .no-data {
             text-align: center;
-            color: #6b7280;
-            padding: 32px;
+            padding: 30px 0;
+            color: #a8a29e;
+            font-size: 0.9rem;
+            font-style: italic;
         }
 
-        .footer {
-            margin-top: 24px;
-            text-align: center;
-            font-size: 0.875rem;
-            color: #4b5563;
-        }
-
-        .footer p {
-            margin: 4px 0;
-        }
-
-        .footer .connected {
-            font-weight: bold;
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .spinning {
-            animation: spin 1s linear infinite;
-        }
-
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                gap: 16px;
-            }
-
-            .header h1 {
-                font-size: 1.5rem;
-            }
-
-            .forms-grid,
-            .transactions-grid,
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-        }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <h1>KHANAGO MANAGER DASHBOARD</h1>
-            <button class="refresh-btn" onclick="loadAllData()">
-                <i data-lucide="refresh-cw" id="refresh-icon"></i>
-                REFRESH
+        <header class="header">
+            <div class="brand">
+                <h1>KHANAGO</h1>
+                <span>Manager Dashboard</span>
+            </div>
+            <button class="refresh-btn" onclick="loadAllData()" aria-label="Refresh Data">
+                <i data-lucide="rotate-cw" id="refresh-icon"></i>
             </button>
-        </div>
+        </header>
 
-        <!-- Message -->
-        <div id="message" class="message"></div>
-
-        <!-- Stats Cards -->
-        <div class="stats-grid">
+        <section class="stats-grid">
             <div class="stat-card expenses">
-                <div>
-                    <div class="stat-label">TOTAL EXPENSES</div>
-                    <div class="stat-value">₹<span id="totalExpenses">0.00</span></div>
-                </div>
-                <i data-lucide="trending-down" style="color: #dc2626; width: 40px; height: 40px;"></i>
+                <div class="stat-label">Total Expenses</div>
+                <div class="stat-value">₹<span id="totalExpenses">0.00</span></div>
+                <i data-lucide="trending-down" class="stat-icon"></i>
             </div>
             <div class="stat-card received">
-                <div>
-                    <div class="stat-label">TOTAL RECEIVED</div>
-                    <div class="stat-value">₹<span id="totalReceived">0.00</span></div>
-                </div>
-                <i data-lucide="trending-up" style="color: #10b981; width: 40px; height: 40px;"></i>
+                <div class="stat-label">Total Received</div>
+                <div class="stat-value">₹<span id="totalReceived">0.00</span></div>
+                <i data-lucide="trending-up" class="stat-icon"></i>
             </div>
-        </div>
+        </section>
 
-        <!-- Forms -->
-        <div class="forms-grid">
-            <!-- Add Expense Form -->
-            <div class="form-card">
-                <h2>
-                    <i data-lucide="dollar-sign"></i>
-                    ADD EXPENSE
-                </h2>
+        <div class="main-grid">
+            <div class="card">
+                <div class="card-header">
+                    <i data-lucide="minus-circle"></i>
+                    <h2>New Expense</h2>
+                </div>
+                
                 <div class="form-group">
-                    <label>DATE</label>
+                    <label>Date</label>
                     <input type="date" id="expenseDate">
                 </div>
+                
                 <div class="form-group">
-                    <label>CATEGORY</label>
+                    <label>Category</label>
                     <select id="expenseCategory">
-                        <option value="">SELECT CATEGORY</option>
-                        <option value="FUEL">FUEL</option>
-                        <option value="MAINTENANCE">MAINTENANCE</option>
-                        <option value="SALARY">SALARY</option>
-                        <option value="FOOD">FOOD</option>
-                        <option value="RENT">RENT</option>
-                        <option value="UTILITIES">UTILITIES</option>
-                        <option value="OTHER">OTHER</option>
+                        <option value="" disabled selected>Select Category</option>
+                        <option value="FUEL">Fuel</option>
+                        <option value="MAINTENANCE">Maintenance</option>
+                        <option value="SALARY">Salary</option>
+                        <option value="FOOD">Food</option>
+                        <option value="RENT">Rent</option>
+                        <option value="UTILITIES">Utilities</option>
+                        <option value="OTHER">Other</option>
                     </select>
                 </div>
+
                 <div class="form-group">
-                    <label>AMOUNT (₹)</label>
-                    <input type="number" step="0.01" id="expenseAmount" placeholder="ENTER AMOUNT">
+                    <label>Amount (₹)</label>
+                    <input type="number" step="0.01" id="expenseAmount" placeholder="0.00" inputmode="decimal">
                 </div>
+
                 <div class="form-group">
-                    <label>DESCRIPTION</label>
-                    <textarea id="expenseDescription" rows="3" placeholder="ENTER DESCRIPTION"></textarea>
+                    <label>Description</label>
+                    <textarea id="expenseDescription" rows="2" placeholder="Brief details..."></textarea>
                 </div>
-                <button class="submit-btn expense" onclick="addExpense()">ADD EXPENSE</button>
+
+                <button class="submit-btn expense" onclick="addExpense()">
+                    <span>Record Expense</span>
+                    <i data-lucide="arrow-right" size="16"></i>
+                </button>
             </div>
 
-            <!-- Add Payment Form -->
-            <div class="form-card">
-                <h2>
-                    <i data-lucide="user"></i>
-                    RIDER PAYMENT RECEIVED
-                </h2>
+            <div class="card">
+                <div class="card-header">
+                    <i data-lucide="plus-circle"></i>
+                    <h2>Rider Payment</h2>
+                </div>
+
                 <div class="form-group">
-                    <label>DATE</label>
+                    <label>Date</label>
                     <input type="date" id="paymentDate">
                 </div>
+
                 <div class="form-group">
-                    <label>RIDER NAME</label>
+                    <label>Rider Name</label>
                     <select id="paymentRider">
-                        <option value="SUMIT KUMAR">SUMIT KUMAR</option>
-                        <option value="BRIJESH GUPTA">BRIJESH GUPTA</option>
+                        <option value="SUMIT KUMAR">Sumit Kumar</option>
+                        <option value="BRIJESH GUPTA">Brijesh Gupta</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>AMOUNT (₹)</label>
-                    <input type="number" step="0.01" id="paymentAmount" placeholder="ENTER AMOUNT">
-                </div>
-                <div class="form-group">
-                    <label>NOTES</label>
-                    <textarea id="paymentNotes" rows="3" placeholder="ENTER NOTES"></textarea>
-                </div>
-                <button class="submit-btn payment" onclick="addPayment()">ADD PAYMENT</button>
-            </div>
-        </div>
 
-        <!-- Recent Transactions -->
-        <div class="transactions-grid">
-            <!-- Recent Expenses -->
-            <div class="transaction-card">
-                <h2>RECENT EXPENSES</h2>
+                <div class="form-group">
+                    <label>Amount (₹)</label>
+                    <input type="number" step="0.01" id="paymentAmount" placeholder="0.00" inputmode="decimal">
+                </div>
+
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="paymentNotes" rows="2" placeholder="Optional notes..."></textarea>
+                </div>
+
+                <button class="submit-btn payment" onclick="addPayment()">
+                    <span>Record Payment</span>
+                    <i data-lucide="arrow-right" size="16"></i>
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i data-lucide="history"></i>
+                    <h2>Recent Expenses</h2>
+                </div>
                 <div class="transaction-list" id="expensesList">
-                    <div class="no-data">NO EXPENSES RECORDED YET</div>
+                    <div class="no-data">Loading history...</div>
                 </div>
             </div>
 
-            <!-- Recent Payments -->
-            <div class="transaction-card">
-                <h2>RECENT PAYMENTS</h2>
+            <div class="card">
+                <div class="card-header">
+                    <i data-lucide="wallet"></i>
+                    <h2>Recent Payments</h2>
+                </div>
                 <div class="transaction-list" id="paymentsList">
-                    <div class="no-data">NO PAYMENTS RECORDED YET</div>
+                    <div class="no-data">Loading history...</div>
                 </div>
             </div>
         </div>
 
-        <!-- Footer -->
-        <div class="footer">
-            <p class="connected">CONNECTED TO GOOGLE SHEETS ✓</p>
-            <p>ALL DATA IS AUTOMATICALLY SAVED</p>
-        </div>
+        <footer class="footer">
+            <p><span class="status-dot"></span>Syncing with Google Sheets</p>
+            <p style="opacity: 0.6; font-size: 0.7rem; margin-top: 4px;">KHANAGO v2.0</p>
+        </footer>
+    </div>
+
+    <div id="toast" class="toast">
+        <span id="toast-icon"></span>
+        <span id="toast-message">Action successful</span>
     </div>
 
     <script>
@@ -495,12 +540,15 @@
             document.getElementById('paymentDate').value = today;
         }
 
-        function showMessage(text, type) {
-            const msg = document.getElementById('message');
+        function showToast(text, type) {
+            const toast = document.getElementById('toast');
+            const msg = document.getElementById('toast-message');
+            
             msg.textContent = text;
-            msg.className = `message ${type} show`;
+            toast.className = `toast ${type} show`;
+            
             setTimeout(() => {
-                msg.className = 'message';
+                toast.classList.remove('show');
             }, 3000);
         }
 
@@ -509,7 +557,11 @@
             const btns = document.querySelectorAll('button');
             const icon = document.getElementById('refresh-icon');
             
-            btns.forEach(btn => btn.disabled = isLoading);
+            btns.forEach(btn => {
+                btn.disabled = isLoading;
+                if(isLoading) btn.style.opacity = "0.7";
+                else btn.style.opacity = "1";
+            });
             
             if (isLoading && icon) {
                 icon.classList.add('spinning');
@@ -521,6 +573,7 @@
         async function loadAllData() {
             setLoading(true);
             try {
+                // Parallel execution for speed
                 await Promise.all([
                     loadExpenses(),
                     loadPayments(),
@@ -528,7 +581,7 @@
                 ]);
             } catch (error) {
                 console.error('Error loading data:', error);
-                showMessage('ERROR LOADING DATA FROM SHEETS', 'error');
+                showToast('Connection failed. Retrying...', 'error');
             }
             setLoading(false);
         }
@@ -537,24 +590,16 @@
             try {
                 const response = await fetch(`${SCRIPT_URL}?action=getExpenses`);
                 const result = await response.json();
-                if (result.success) {
-                    displayExpenses(result.data);
-                }
-            } catch (error) {
-                console.error('Error loading expenses:', error);
-            }
+                if (result.success) displayExpenses(result.data);
+            } catch (error) { console.error(error); }
         }
 
         async function loadPayments() {
             try {
                 const response = await fetch(`${SCRIPT_URL}?action=getPayments`);
                 const result = await response.json();
-                if (result.success) {
-                    displayPayments(result.data);
-                }
-            } catch (error) {
-                console.error('Error loading payments:', error);
-            }
+                if (result.success) displayPayments(result.data);
+            } catch (error) { console.error(error); }
         }
 
         async function loadSummary() {
@@ -562,50 +607,56 @@
                 const response = await fetch(`${SCRIPT_URL}?action=getSummary`);
                 const result = await response.json();
                 if (result.success) {
-                    document.getElementById('totalExpenses').textContent = result.data.totalExpenses.toFixed(2);
-                    document.getElementById('totalReceived').textContent = result.data.totalReceived.toFixed(2);
+                    document.getElementById('totalExpenses').textContent = result.data.totalExpenses.toLocaleString('en-IN', {minimumFractionDigits: 2});
+                    document.getElementById('totalReceived').textContent = result.data.totalReceived.toLocaleString('en-IN', {minimumFractionDigits: 2});
                 }
-            } catch (error) {
-                console.error('Error loading summary:', error);
-            }
+            } catch (error) { console.error(error); }
         }
 
         function displayExpenses(expenses) {
             const list = document.getElementById('expensesList');
-            if (expenses.length === 0) {
-                list.innerHTML = '<div class="no-data">NO EXPENSES RECORDED YET</div>';
+            if (!expenses || expenses.length === 0) {
+                list.innerHTML = '<div class="no-data">No expenses found</div>';
                 return;
             }
 
-            list.innerHTML = expenses.slice().reverse().slice(0, 10).map(exp => `
-                <div class="transaction-item expense">
-                    <div class="transaction-info">
-                        <div class="transaction-title">${exp.category}</div>
-                        <div class="transaction-desc">${exp.description}</div>
-                        <div class="transaction-date">${exp.date}</div>
+            // Using standard JS map instead of Lucide icons inside string literal to avoid rendering issues
+            // We re-render icons after HTML update
+            list.innerHTML = expenses.slice().reverse().slice(0, 15).map(exp => `
+                <div class="transaction-item">
+                    <div class="t-icon-box exp">
+                        <i data-lucide="tag" size="18"></i>
                     </div>
-                    <div class="transaction-amount">₹${parseFloat(exp.amount).toFixed(2)}</div>
+                    <div class="t-details">
+                        <div class="t-title">${exp.category}</div>
+                        <div class="t-subtitle">${exp.date} • ${exp.description || 'No desc'}</div>
+                    </div>
+                    <div class="t-amount exp">-₹${parseFloat(exp.amount).toFixed(0)}</div>
                 </div>
             `).join('');
+            lucide.createIcons();
         }
 
         function displayPayments(payments) {
             const list = document.getElementById('paymentsList');
-            if (payments.length === 0) {
-                list.innerHTML = '<div class="no-data">NO PAYMENTS RECORDED YET</div>';
+            if (!payments || payments.length === 0) {
+                list.innerHTML = '<div class="no-data">No payments found</div>';
                 return;
             }
 
-            list.innerHTML = payments.slice().reverse().slice(0, 10).map(pay => `
-                <div class="transaction-item payment">
-                    <div class="transaction-info">
-                        <div class="transaction-title">${pay.rider}</div>
-                        <div class="transaction-desc">${pay.notes}</div>
-                        <div class="transaction-date">${pay.date}</div>
+            list.innerHTML = payments.slice().reverse().slice(0, 15).map(pay => `
+                <div class="transaction-item">
+                    <div class="t-icon-box pay">
+                        <i data-lucide="user" size="18"></i>
                     </div>
-                    <div class="transaction-amount">₹${parseFloat(pay.amount).toFixed(2)}</div>
+                    <div class="t-details">
+                        <div class="t-title">${pay.rider}</div>
+                        <div class="t-subtitle">${pay.date} • ${pay.notes || 'No notes'}</div>
+                    </div>
+                    <div class="t-amount pay">+₹${parseFloat(pay.amount).toFixed(0)}</div>
                 </div>
             `).join('');
+            lucide.createIcons();
         }
 
         async function addExpense() {
@@ -615,7 +666,7 @@
             const description = document.getElementById('expenseDescription').value;
 
             if (!category || !amount) {
-                showMessage('PLEASE FILL ALL REQUIRED FIELDS', 'error');
+                showToast('Please fill required fields', 'error');
                 return;
             }
 
@@ -633,18 +684,18 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    showMessage('EXPENSE ADDED SUCCESSFULLY!', 'success');
+                    showToast('Expense saved successfully', 'success');
+                    // Reset fields
                     document.getElementById('expenseCategory').value = '';
                     document.getElementById('expenseAmount').value = '';
                     document.getElementById('expenseDescription').value = '';
                     setTodayDate();
                     await loadAllData();
                 } else {
-                    showMessage('ERROR: ' + result.message, 'error');
+                    showToast('Error: ' + result.message, 'error');
                 }
             } catch (error) {
-                showMessage('ERROR ADDING EXPENSE', 'error');
-                console.error('Error:', error);
+                showToast('Network error occurred', 'error');
             }
             setLoading(false);
         }
@@ -656,7 +707,7 @@
             const notes = document.getElementById('paymentNotes').value;
 
             if (!amount) {
-                showMessage('PLEASE ENTER AMOUNT', 'error');
+                showToast('Please enter an amount', 'error');
                 return;
             }
 
@@ -674,17 +725,16 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    showMessage('PAYMENT ADDED SUCCESSFULLY!', 'success');
+                    showToast('Payment received successfully', 'success');
                     document.getElementById('paymentAmount').value = '';
                     document.getElementById('paymentNotes').value = '';
                     setTodayDate();
                     await loadAllData();
                 } else {
-                    showMessage('ERROR: ' + result.message, 'error');
+                    showToast('Error: ' + result.message, 'error');
                 }
             } catch (error) {
-                showMessage('ERROR ADDING PAYMENT', 'error');
-                console.error('Error:', error);
+                showToast('Network error occurred', 'error');
             }
             setLoading(false);
         }
