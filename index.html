@@ -1,692 +1,263 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="EN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KHANAGO MANAGER DASHBOARD</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.js"></script>
+    <title>KHANAGO | MANAGER ELITE</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --PRIMARY: #FF6B00;
+            --PRIMARY-DARK: #E65A00;
+            --BG-PAGE: #F4F4F7;
+            --BG-WHITE: #FFFFFF;
+            --BORDER: #E0E0E0;
+            --TEXT-MAIN: #1A1A1A;
+            --TEXT-DIM: #666666;
+            --DANGER: #D32F2F;
+            --SUCCESS: #2E7D32;
+            --ORANGE-TINT: rgba(255, 107, 0, 0.05);
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-            background: linear-gradient(to bottom right, #fff7ed, #ffedd5);
-            min-height: 100vh;
-            padding: 24px;
+        /* GLOBAL STYLES */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'CALIBRI', SANS-SERIF; text-transform: uppercase; }
+        body { background: var(--BG-PAGE); color: var(--TEXT-MAIN); padding: 40px 20px; min-height: 100vh; }
+        .CONTAINER { max-width: 1300px; margin: 0 auto; }
+
+        /* HEADER */
+        header { 
+            background: var(--BG-WHITE); padding: 30px; border-radius: 8px; 
+            border: 1px solid var(--BORDER); margin-bottom: 24px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
+        header h1 { font-size: 1.8rem; font-weight: 900; border-left: 5px solid var(--PRIMARY); padding-left: 15px; }
+        header span { color: var(--PRIMARY); font-size: 0.8rem; letter-spacing: 3px; display: block; }
 
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
+        /* ANALYTICS */
+        .STATS-GRID { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .STAT-CARD { background: var(--BG-WHITE); border: 1px solid var(--BORDER); padding: 25px; border-radius: 8px; text-align: center; }
+        .STAT-LABEL { font-size: 0.75rem; color: var(--TEXT-DIM); font-weight: 800; letter-spacing: 1px; margin-bottom: 5px; }
+        .STAT-VALUE { font-size: 2.2rem; font-weight: 900; }
+        .STAT-VALUE.GREEN { color: var(--SUCCESS); }
+        .STAT-VALUE.RED { color: var(--DANGER); }
+
+        /* FORMS */
+        .FORMS-GRID { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 24px; margin-bottom: 40px; }
+        .FORM-CARD { background: var(--BG-WHITE); border: 1px solid var(--BORDER); border-radius: 8px; padding: 30px; }
+        .FORM-CARD h2 { font-size: 0.9rem; margin-bottom: 25px; color: var(--PRIMARY); border-bottom: 1px solid var(--ORANGE-TINT); padding-bottom: 10px; }
+        
+        .FORM-GROUP { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-size: 0.7rem; font-weight: 700; color: var(--TEXT-DIM); }
+        input, select, textarea { 
+            width: 100%; padding: 12px; border: 1px solid var(--BORDER); 
+            border-radius: 4px; font-weight: 600; font-size: 0.85rem; 
         }
+        textarea { height: 80px; resize: none; text-transform: uppercase; }
+        input:focus, textarea:focus { outline: none; border-color: var(--PRIMARY); background: var(--ORANGE-TINT); }
+        input[readonly] { background: #F9F9F9; color: var(--TEXT-DIM); cursor: not-allowed; }
 
-        .header {
-            background: linear-gradient(to right, #ea580c, #f97316);
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            padding: 24px;
-            margin-bottom: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* BUTTONS */
+        .BTN { 
+            width: 100%; background: var(--PRIMARY); color: #FFF; border: none; 
+            padding: 15px; font-weight: 900; cursor: pointer; border-radius: 4px; transition: 0.2s;
         }
+        .BTN:hover { background: var(--PRIMARY-DARK); transform: translateY(-2px); }
+        .BTN-REFRESH { background: var(--TEXT-MAIN); width: auto; padding: 10px 20px; font-size: 0.7rem; }
 
-        .header h1 {
-            color: white;
-            font-size: 2rem;
-            font-weight: bold;
-            letter-spacing: 0.05em;
-        }
-
-        .refresh-btn {
-            background: white;
-            color: #ea580c;
-            padding: 12px 20px;
-            border-radius: 8px;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: background 0.2s;
-        }
-
-        .refresh-btn:hover {
-            background: #ffedd5;
-        }
-
-        .refresh-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .message {
-            padding: 16px;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 24px;
-            display: none;
-        }
-
-        .message.success {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        .message.error {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        .message.show {
-            display: block;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-
-        .stat-card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 24px;
-            border-left: 4px solid;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .stat-card.expenses {
-            border-left-color: #f97316;
-        }
-
-        .stat-card.received {
-            border-left-color: #10b981;
-        }
-
-        .stat-label {
-            font-size: 0.875rem;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .stat-card.expenses .stat-label {
-            color: #ea580c;
-        }
-
-        .stat-card.received .stat-label {
-            color: #059669;
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #1f2937;
-        }
-
-        .forms-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-
-        .form-card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            padding: 24px;
-        }
-
-        .form-card h2 {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #ea580c;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: bold;
-            color: #374151;
-            margin-bottom: 8px;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 10px 16px;
-            border: 2px solid #fed7aa;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.2s;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #f97316;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            font-family: inherit;
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .submit-btn.expense {
-            background: #ea580c;
-            color: white;
-        }
-
-        .submit-btn.expense:hover {
-            background: #c2410c;
-        }
-
-        .submit-btn.payment {
-            background: #059669;
-            color: white;
-        }
-
-        .submit-btn.payment:hover {
-            background: #047857;
-        }
-
-        .submit-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .transactions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 24px;
-        }
-
-        .transaction-card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            padding: 24px;
-        }
-
-        .transaction-card h2 {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #ea580c;
-            margin-bottom: 16px;
-        }
-
-        .transaction-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .transaction-item {
-            border-left: 4px solid;
-            padding: 16px;
-            border-radius: 4px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-
-        .transaction-item.expense {
-            background: #ffedd5;
-            border-left-color: #fb923c;
-        }
-
-        .transaction-item.payment {
-            background: #d1fae5;
-            border-left-color: #34d399;
-        }
-
-        .transaction-info {
-            flex: 1;
-        }
-
-        .transaction-title {
-            font-weight: bold;
-            color: #1f2937;
-            margin-bottom: 4px;
-        }
-
-        .transaction-desc {
-            font-size: 0.875rem;
-            color: #4b5563;
-            margin-bottom: 4px;
-        }
-
-        .transaction-date {
-            font-size: 0.75rem;
-            color: #6b7280;
-        }
-
-        .transaction-amount {
-            font-size: 1.25rem;
-            font-weight: bold;
-            margin-left: 16px;
-        }
-
-        .transaction-item.expense .transaction-amount {
-            color: #dc2626;
-        }
-
-        .transaction-item.payment .transaction-amount {
-            color: #059669;
-        }
-
-        .no-data {
-            text-align: center;
-            color: #6b7280;
-            padding: 32px;
-        }
-
-        .footer {
-            margin-top: 24px;
-            text-align: center;
-            font-size: 0.875rem;
-            color: #4b5563;
-        }
-
-        .footer p {
-            margin: 4px 0;
-        }
-
-        .footer .connected {
-            font-weight: bold;
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .spinning {
-            animation: spin 1s linear infinite;
-        }
-
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                gap: 16px;
-            }
-
-            .header h1 {
-                font-size: 1.5rem;
-            }
-
-            .forms-grid,
-            .transactions-grid,
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+        /* TABLES */
+        .DATA-SECTION { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 24px; }
+        .TABLE-CARD { background: var(--BG-WHITE); border: 1px solid var(--BORDER); border-radius: 8px; padding: 25px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th { text-align: left; padding: 12px; background: #F9F9F9; color: var(--TEXT-DIM); font-size: 0.65rem; border-bottom: 2px solid var(--BORDER); }
+        td { padding: 12px; border-bottom: 1px solid var(--BORDER); font-size: 0.85rem; font-weight: 600; }
+        
+        .NOTIFICATION { position: fixed; bottom: 30px; right: 30px; background: var(--TEXT-MAIN); color: #FFF; padding: 15px 30px; font-weight: 700; border-radius: 4px; display: none; z-index: 1000; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <h1>KHANAGO MANAGER DASHBOARD</h1>
-            <button class="refresh-btn" onclick="loadAllData()">
-                <i data-lucide="refresh-cw" id="refresh-icon"></i>
-                REFRESH
-            </button>
-        </div>
 
-        <!-- Message -->
-        <div id="message" class="message"></div>
-
-        <!-- Stats Cards -->
-        <div class="stats-grid">
-            <div class="stat-card expenses">
-                <div>
-                    <div class="stat-label">TOTAL EXPENSES</div>
-                    <div class="stat-value">₹<span id="totalExpenses">0.00</span></div>
-                </div>
-                <i data-lucide="trending-down" style="color: #dc2626; width: 40px; height: 40px;"></i>
+    <div class="CONTAINER">
+        <header>
+            <div>
+                <h1>KHANAGO <span>MANAGER DASHBOARD</span></h1>
             </div>
-            <div class="stat-card received">
-                <div>
-                    <div class="stat-label">TOTAL RECEIVED</div>
-                    <div class="stat-value">₹<span id="totalReceived">0.00</span></div>
-                </div>
-                <i data-lucide="trending-up" style="color: #10b981; width: 40px; height: 40px;"></i>
+            <button class="BTN BTN-REFRESH" onclick="FETCH_ALL_DATA()">REFRESH DATABASE</button>
+        </header>
+
+        <div id="NOTIFICATION" class="NOTIFICATION"></div>
+
+        <div class="STATS-GRID">
+            <div class="STAT-CARD">
+                <div class="STAT-LABEL">TOTAL EXPENSES (LOGGED)</div>
+                <div class="STAT-VALUE RED">₹<span id="VAL-EXPENSES">0</span></div>
+            </div>
+            <div class="STAT-CARD">
+                <div class="STAT-LABEL">TOTAL PAYMENTS RECEIVED</div>
+                <div class="STAT-VALUE GREEN">₹<span id="VAL-RECEIVED">0</span></div>
             </div>
         </div>
 
-        <!-- Forms -->
-        <div class="forms-grid">
-            <!-- Add Expense Form -->
-            <div class="form-card">
-                <h2>
-                    <i data-lucide="dollar-sign"></i>
-                    ADD EXPENSE
-                </h2>
-                <div class="form-group">
-                    <label>DATE</label>
-                    <input type="date" id="expenseDate">
-                </div>
-                <div class="form-group">
-                    <label>CATEGORY</label>
-                    <select id="expenseCategory">
-                        <option value="">SELECT CATEGORY</option>
-                        <option value="FUEL">FUEL</option>
-                        <option value="MAINTENANCE">MAINTENANCE</option>
-                        <option value="SALARY">SALARY</option>
-                        <option value="FOOD">FOOD</option>
-                        <option value="RENT">RENT</option>
-                        <option value="UTILITIES">UTILITIES</option>
-                        <option value="OTHER">OTHER</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>AMOUNT (₹)</label>
-                    <input type="number" step="0.01" id="expenseAmount" placeholder="ENTER AMOUNT">
-                </div>
-                <div class="form-group">
-                    <label>DESCRIPTION</label>
-                    <textarea id="expenseDescription" rows="3" placeholder="ENTER DESCRIPTION"></textarea>
-                </div>
-                <button class="submit-btn expense" onclick="addExpense()">ADD EXPENSE</button>
+        <div class="FORMS-GRID">
+            <div class="FORM-CARD">
+                <h2>RECORD OPERATIONAL EXPENSE</h2>
+                <form id="EXPENSE-FORM">
+                    <div class="FORM-GROUP">
+                        <label>MANAGER NAME</label>
+                        <input type="text" id="EXP-MANAGER" value="SANDEEP GOND" readonly>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="FORM-GROUP">
+                            <label>DATE</label>
+                            <input type="date" id="EXP-DATE" required>
+                        </div>
+                        <div class="FORM-GROUP">
+                            <label>CATEGORY</label>
+                            <select id="EXP-CAT" required>
+                                <option value="FUEL">FUEL</option>
+                                <option value="MAINTENANCE">MAINTENANCE</option>
+                                <option value="SALARY">SALARY</option>
+                                <option value="RENT">RENT</option>
+                                <option value="OTHER">OTHER</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="FORM-GROUP">
+                        <label>AMOUNT (₹)</label>
+                        <input type="number" id="EXP-AMT" placeholder="0.00" required>
+                    </div>
+                    <div class="FORM-GROUP">
+                        <label>NOTES / DESCRIPTION</label>
+                        <textarea id="EXP-NOTES" placeholder="ENTER EXPENSE DETAILS..."></textarea>
+                    </div>
+                    <button type="submit" class="BTN">POST EXPENSE</button>
+                </form>
             </div>
 
-            <!-- Add Payment Form -->
-            <div class="form-card">
-                <h2>
-                    <i data-lucide="user"></i>
-                    RIDER PAYMENT RECEIVED
-                </h2>
-                <div class="form-group">
-                    <label>DATE</label>
-                    <input type="date" id="paymentDate">
-                </div>
-                <div class="form-group">
-                    <label>RIDER NAME</label>
-                    <select id="paymentRider">
-                        <option value="SUMIT KUMAR">SUMIT KUMAR</option>
-                        <option value="BRIJESH GUPTA">BRIJESH GUPTA</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>AMOUNT (₹)</label>
-                    <input type="number" step="0.01" id="paymentAmount" placeholder="ENTER AMOUNT">
-                </div>
-                <div class="form-group">
-                    <label>NOTES</label>
-                    <textarea id="paymentNotes" rows="3" placeholder="ENTER NOTES"></textarea>
-                </div>
-                <button class="submit-btn payment" onclick="addPayment()">ADD PAYMENT</button>
+            <div class="FORM-CARD">
+                <h2>RECEIVE RIDER PAYMENT</h2>
+                <form id="PAY-FORM">
+                    <div class="FORM-GROUP">
+                        <label>PAYMENT DATE</label>
+                        <input type="date" id="PAY-DATE" required>
+                    </div>
+                    <div class="FORM-GROUP">
+                        <label>RIDER NAME</label>
+                        <select id="PAY-RIDER" required><option value="">LOADING...</option></select>
+                    </div>
+                    <div class="FORM-GROUP">
+                        <label>RECEIVED AMOUNT (₹)</label>
+                        <input type="number" id="PAY-AMT" placeholder="0.00" required>
+                    </div>
+                    <div class="FORM-GROUP">
+                        <label>TRANSACTION NOTES</label>
+                        <textarea id="PAY-NOTES" placeholder="ENTER PAYMENT NOTES..."></textarea>
+                    </div>
+                    <button type="submit" class="BTN" style="background: var(--SUCCESS);">LOG PAYMENT</button>
+                </form>
             </div>
         </div>
 
-        <!-- Recent Transactions -->
-        <div class="transactions-grid">
-            <!-- Recent Expenses -->
-            <div class="transaction-card">
-                <h2>RECENT EXPENSES</h2>
-                <div class="transaction-list" id="expensesList">
-                    <div class="no-data">NO EXPENSES RECORDED YET</div>
-                </div>
+        <div class="DATA-SECTION">
+            <div class="TABLE-CARD">
+                <h2>PAYMENT HISTORY</h2>
+                <table>
+                    <thead>
+                        <tr><th>DATE</th><th>RIDER</th><th>AMOUNT</th><th>NOTES</th></tr>
+                    </thead>
+                    <tbody id="PAYMENT-TABLE"></tbody>
+                </table>
             </div>
-
-            <!-- Recent Payments -->
-            <div class="transaction-card">
-                <h2>RECENT PAYMENTS</h2>
-                <div class="transaction-list" id="paymentsList">
-                    <div class="no-data">NO PAYMENTS RECORDED YET</div>
-                </div>
+            <div class="TABLE-CARD">
+                <h2>EXPENSE LOG</h2>
+                <table>
+                    <thead>
+                        <tr><th>DATE</th><th>CATEGORY</th><th>AMOUNT</th><th>NOTES</th></tr>
+                    </thead>
+                    <tbody id="EXPENSE-TABLE"></tbody>
+                </table>
             </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="footer">
-            <p class="connected">CONNECTED TO GOOGLE SHEETS ✓</p>
-            <p>ALL DATA IS AUTOMATICALLY SAVED</p>
         </div>
     </div>
 
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzUnvJ9I9k_1T9wdNXgTI1xzo53O2uv-oDiDVBfqEpeioT4Ek7VMQ6XpUeAVdFG-1EX3A/exec';
-        let loading = false;
+        const SUPABASE_URL = 'https://tyhrahuionsvzyuzdtkr.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5aHJhaHVpb25zdnp5dXpkdGtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwNzA4MTcsImV4cCI6MjA4MTY0NjgxN30.ypEmevr3XTuyNtJxUSSqCplAdcru9fkE3q15HOQHrVY';
+        const _SB = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            lucide.createIcons();
-            setTodayDate();
-            loadAllData();
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date().toISOString().split('T')[0];
+            document.querySelectorAll('input[type="date"]').forEach(i => i.value = today);
+            FETCH_ALL_DATA();
         });
 
-        function setTodayDate() {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('expenseDate').value = today;
-            document.getElementById('paymentDate').value = today;
+        async function FETCH_ALL_DATA() {
+            const { data: riders } = await _SB.from('employees').select('id, name').eq('position', 'RIDER');
+            document.getElementById('PAY-RIDER').innerHTML = riders.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+
+            const { data: expenses } = await _SB.from('expenses').select('*').order('date', {ascending: false});
+            RENDER_EXPENSES(expenses);
+
+            const { data: payments } = await _SB.from('rider_payments').select('*').order('date', {ascending: false});
+            RENDER_PAYMENTS(payments, riders);
         }
 
-        function showMessage(text, type) {
-            const msg = document.getElementById('message');
-            msg.textContent = text;
-            msg.className = `message ${type} show`;
-            setTimeout(() => {
-                msg.className = 'message';
-            }, 3000);
+        function RENDER_EXPENSES(data) {
+            let total = 0;
+            const html = data.map(e => {
+                total += parseFloat(e.amount);
+                return `<tr><td>${e.date}</td><td>${e.category}</td><td style="color:var(--DANGER)">₹${e.amount}</td><td style="font-size:0.7rem; color:var(--TEXT-DIM)">${e.notes || '--'}</td></tr>`;
+            }).join('');
+            document.getElementById('EXPENSE-TABLE').innerHTML = html;
+            document.getElementById('VAL-EXPENSES').innerText = total.toLocaleString();
         }
 
-        function setLoading(isLoading) {
-            loading = isLoading;
-            const btns = document.querySelectorAll('button');
-            const icon = document.getElementById('refresh-icon');
-            
-            btns.forEach(btn => btn.disabled = isLoading);
-            
-            if (isLoading && icon) {
-                icon.classList.add('spinning');
-            } else if (icon) {
-                icon.classList.remove('spinning');
-            }
+        function RENDER_PAYMENTS(data, riders) {
+            let total = 0;
+            const html = data.map(p => {
+                total += parseFloat(p.amount);
+                const rName = riders.find(r => r.id == p.rider_id)?.name || 'UNKNOWN';
+                return `<tr><td>${p.date}</td><td>${rName}</td><td style="color:var(--SUCCESS)">₹${p.amount}</td><td style="font-size:0.7rem; color:var(--TEXT-DIM)">${p.notes || '--'}</td></tr>`;
+            }).join('');
+            document.getElementById('PAYMENT-TABLE').innerHTML = html;
+            document.getElementById('VAL-RECEIVED').innerText = total.toLocaleString();
         }
 
-        async function loadAllData() {
-            setLoading(true);
-            try {
-                await Promise.all([
-                    loadExpenses(),
-                    loadPayments(),
-                    loadSummary()
-                ]);
-            } catch (error) {
-                console.error('Error loading data:', error);
-                showMessage('ERROR LOADING DATA FROM SHEETS', 'error');
-            }
-            setLoading(false);
-        }
+        document.getElementById('EXPENSE-FORM').onsubmit = async (e) => {
+            e.preventDefault();
+            const payload = {
+                date: document.getElementById('EXP-DATE').value,
+                category: document.getElementById('EXP-CAT').value,
+                amount: document.getElementById('EXP-AMT').value,
+                manager_name: document.getElementById('EXP-MANAGER').value,
+                notes: document.getElementById('EXP-NOTES').value
+            };
+            await _SB.from('expenses').insert([payload]);
+            NOTIFY("EXPENSE LOGGED BY SANDEEP GOND");
+            document.getElementById('EXP-NOTES').value = "";
+            document.getElementById('EXP-AMT').value = "";
+            FETCH_ALL_DATA();
+        };
 
-        async function loadExpenses() {
-            try {
-                const response = await fetch(`${SCRIPT_URL}?action=getExpenses`);
-                const result = await response.json();
-                if (result.success) {
-                    displayExpenses(result.data);
-                }
-            } catch (error) {
-                console.error('Error loading expenses:', error);
-            }
-        }
+        document.getElementById('PAY-FORM').onsubmit = async (e) => {
+            e.preventDefault();
+            const payload = {
+                date: document.getElementById('PAY-DATE').value,
+                rider_id: document.getElementById('PAY-RIDER').value,
+                amount: document.getElementById('PAY-AMT').value,
+                notes: document.getElementById('PAY-NOTES').value
+            };
+            await _SB.from('rider_payments').insert([payload]);
+            NOTIFY("PAYMENT RECEIVED AND LOGGED");
+            document.getElementById('PAY-NOTES').value = "";
+            document.getElementById('PAY-AMT').value = "";
+            FETCH_ALL_DATA();
+        };
 
-        async function loadPayments() {
-            try {
-                const response = await fetch(`${SCRIPT_URL}?action=getPayments`);
-                const result = await response.json();
-                if (result.success) {
-                    displayPayments(result.data);
-                }
-            } catch (error) {
-                console.error('Error loading payments:', error);
-            }
-        }
-
-        async function loadSummary() {
-            try {
-                const response = await fetch(`${SCRIPT_URL}?action=getSummary`);
-                const result = await response.json();
-                if (result.success) {
-                    document.getElementById('totalExpenses').textContent = result.data.totalExpenses.toFixed(2);
-                    document.getElementById('totalReceived').textContent = result.data.totalReceived.toFixed(2);
-                }
-            } catch (error) {
-                console.error('Error loading summary:', error);
-            }
-        }
-
-        function displayExpenses(expenses) {
-            const list = document.getElementById('expensesList');
-            if (expenses.length === 0) {
-                list.innerHTML = '<div class="no-data">NO EXPENSES RECORDED YET</div>';
-                return;
-            }
-
-            list.innerHTML = expenses.slice().reverse().slice(0, 10).map(exp => `
-                <div class="transaction-item expense">
-                    <div class="transaction-info">
-                        <div class="transaction-title">${exp.category}</div>
-                        <div class="transaction-desc">${exp.description}</div>
-                        <div class="transaction-date">${exp.date}</div>
-                    </div>
-                    <div class="transaction-amount">₹${parseFloat(exp.amount).toFixed(2)}</div>
-                </div>
-            `).join('');
-        }
-
-        function displayPayments(payments) {
-            const list = document.getElementById('paymentsList');
-            if (payments.length === 0) {
-                list.innerHTML = '<div class="no-data">NO PAYMENTS RECORDED YET</div>';
-                return;
-            }
-
-            list.innerHTML = payments.slice().reverse().slice(0, 10).map(pay => `
-                <div class="transaction-item payment">
-                    <div class="transaction-info">
-                        <div class="transaction-title">${pay.rider}</div>
-                        <div class="transaction-desc">${pay.notes}</div>
-                        <div class="transaction-date">${pay.date}</div>
-                    </div>
-                    <div class="transaction-amount">₹${parseFloat(pay.amount).toFixed(2)}</div>
-                </div>
-            `).join('');
-        }
-
-        async function addExpense() {
-            const date = document.getElementById('expenseDate').value;
-            const category = document.getElementById('expenseCategory').value;
-            const amount = document.getElementById('expenseAmount').value;
-            const description = document.getElementById('expenseDescription').value;
-
-            if (!category || !amount) {
-                showMessage('PLEASE FILL ALL REQUIRED FIELDS', 'error');
-                return;
-            }
-
-            setLoading(true);
-            try {
-                const params = new URLSearchParams({
-                    action: 'addExpense',
-                    date: date,
-                    category: category,
-                    amount: amount,
-                    description: description
-                });
-
-                const response = await fetch(`${SCRIPT_URL}?${params}`);
-                const result = await response.json();
-
-                if (result.success) {
-                    showMessage('EXPENSE ADDED SUCCESSFULLY!', 'success');
-                    document.getElementById('expenseCategory').value = '';
-                    document.getElementById('expenseAmount').value = '';
-                    document.getElementById('expenseDescription').value = '';
-                    setTodayDate();
-                    await loadAllData();
-                } else {
-                    showMessage('ERROR: ' + result.message, 'error');
-                }
-            } catch (error) {
-                showMessage('ERROR ADDING EXPENSE', 'error');
-                console.error('Error:', error);
-            }
-            setLoading(false);
-        }
-
-        async function addPayment() {
-            const date = document.getElementById('paymentDate').value;
-            const rider = document.getElementById('paymentRider').value;
-            const amount = document.getElementById('paymentAmount').value;
-            const notes = document.getElementById('paymentNotes').value;
-
-            if (!amount) {
-                showMessage('PLEASE ENTER AMOUNT', 'error');
-                return;
-            }
-
-            setLoading(true);
-            try {
-                const params = new URLSearchParams({
-                    action: 'addPayment',
-                    date: date,
-                    rider: rider,
-                    amount: amount,
-                    notes: notes
-                });
-
-                const response = await fetch(`${SCRIPT_URL}?${params}`);
-                const result = await response.json();
-
-                if (result.success) {
-                    showMessage('PAYMENT ADDED SUCCESSFULLY!', 'success');
-                    document.getElementById('paymentAmount').value = '';
-                    document.getElementById('paymentNotes').value = '';
-                    setTodayDate();
-                    await loadAllData();
-                } else {
-                    showMessage('ERROR: ' + result.message, 'error');
-                }
-            } catch (error) {
-                showMessage('ERROR ADDING PAYMENT', 'error');
-                console.error('Error:', error);
-            }
-            setLoading(false);
+        function NOTIFY(m) {
+            const n = document.getElementById('NOTIFICATION');
+            n.innerText = m; n.style.display = 'BLOCK';
+            setTimeout(() => n.style.display = 'NONE', 3000);
         }
     </script>
 </body>
