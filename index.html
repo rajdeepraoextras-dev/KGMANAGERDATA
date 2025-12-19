@@ -23,90 +23,52 @@
         body { background: var(--BG); color: var(--TEXT); padding: 12px; line-height: 1.4; }
         .CONTAINER { max-width: 1000px; margin: 0 auto; }
 
-        /* SLEEK HEADER */
-        header { 
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 5px; margin-bottom: 15px;
-        }
+        /* HEADER */
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 5px; margin-bottom: 15px; }
         header h1 { font-size: 1.2rem; font-weight: 900; letter-spacing: 1px; }
         header h1 span { color: var(--ORANGE); font-size: 0.65rem; display: block; letter-spacing: 3px; }
 
-        .BTN-REFRESH { 
-            background: var(--TEXT); color: white; border: none; padding: 8px 16px;
-            border-radius: 6px; font-size: 0.65rem; font-weight: 800; cursor: pointer;
-            transition: 0.2s; border: 1px solid var(--TEXT);
-        }
+        .BTN-REFRESH { background: var(--TEXT); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; cursor: pointer; transition: 0.2s; border: 1px solid var(--TEXT); }
         .BTN-REFRESH:hover { background: transparent; color: var(--TEXT); }
 
         /* ANALYTICS */
         .STATS { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .STAT-CARD { 
-            background: var(--CARD); padding: 15px; border-radius: 10px; 
-            border: 1px solid var(--BORDER); text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
+        .STAT-CARD { background: var(--CARD); padding: 15px; border-radius: 10px; border: 1px solid var(--BORDER); text-align: center; }
         .STAT-LABEL { font-size: 0.55rem; color: var(--TEXT-LIGHT); font-weight: 800; margin-bottom: 5px; }
         .STAT-VALUE { font-size: 1.3rem; font-weight: 900; }
         .STAT-VALUE.RED { color: var(--RED); }
         .STAT-VALUE.GREEN { color: var(--GREEN); }
 
-        /* GRID FOR FORMS & HISTORY */
+        /* GRID */
         .MAIN-GRID { display: grid; grid-template-columns: 1fr; gap: 20px; }
         @media (min-width: 850px) { .MAIN-GRID { grid-template-columns: 350px 1fr; } }
 
-        /* FORM STYLING */
+        /* FORMS */
         .SECTION-TITLE { font-size: 0.75rem; font-weight: 900; color: var(--ORANGE); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
         .SECTION-TITLE::after { content: ''; flex: 1; height: 1px; background: var(--BORDER); }
-
         .CARD { background: var(--CARD); border: 1px solid var(--BORDER); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
-        
         .FIELD { margin-bottom: 12px; }
         label { display: block; font-size: 0.6rem; font-weight: 800; color: var(--TEXT-LIGHT); margin-bottom: 4px; }
-        input, select, textarea { 
-            width: 100%; padding: 10px; border: 1.5px solid var(--BORDER); 
-            border-radius: 6px; font-size: 0.85rem; font-weight: 700; color: var(--TEXT);
-            background: #fff; transition: 0.2s;
-        }
-        input:focus { outline: none; border-color: var(--ORANGE); background: rgba(255,107,0,0.02); }
-        input[readonly] { background: #F1F5F9; border-color: var(--BORDER); }
+        input, select, textarea { width: 100%; padding: 10px; border: 1.5px solid var(--BORDER); border-radius: 6px; font-size: 0.85rem; font-weight: 700; color: var(--TEXT); background: #fff; }
         textarea { height: 50px; resize: none; }
+        .BTN-POST { width: 100%; padding: 14px; border: none; border-radius: 6px; font-weight: 900; font-size: 0.8rem; cursor: pointer; color: white; background: var(--ORANGE); transition: 0.3s; }
+        .BTN-POST:hover { background: var(--ORANGE-DEEP); }
 
-        .BTN-POST { 
-            width: 100%; padding: 14px; border: none; border-radius: 6px; 
-            font-weight: 900; font-size: 0.8rem; cursor: pointer; color: white;
-            background: var(--ORANGE); transition: 0.3s;
-        }
-        .BTN-POST:hover { background: var(--ORANGE-DEEP); transform: translateY(-1px); }
-
-        /* HISTORY LIST WITH ACTIONS */
+        /* HISTORY */
         .HISTORY-LIST { display: flex; flex-direction: column; gap: 8px; }
-        .LOG-ITEM { 
-            background: var(--CARD); border: 1px solid var(--BORDER); padding: 10px 12px; 
-            border-radius: 8px; display: flex; justify-content: space-between; align-items: center;
-        }
-        .LOG-INFO { display: flex; flex-direction: column; }
+        .LOG-ITEM { background: var(--CARD); border: 1px solid var(--BORDER); padding: 10px 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
         .LOG-MAIN { font-size: 0.75rem; font-weight: 800; }
         .LOG-SUB { font-size: 0.55rem; color: var(--TEXT-LIGHT); font-weight: 600; }
-        
         .LOG-RIGHT { display: flex; align-items: center; gap: 12px; }
-        .LOG-AMT { font-weight: 900; font-size: 0.85rem; min-width: 60px; text-align: right; }
-        
-        .LOG-ACTIONS { display: flex; gap: 5px; }
-        .BTN-ACT { 
-            padding: 5px 8px; font-size: 0.55rem; font-weight: 900; 
-            border-radius: 4px; cursor: pointer; border: 1px solid var(--BORDER);
-            background: #fff; transition: 0.2s;
-        }
+        .LOG-AMT { font-weight: 900; font-size: 0.85rem; text-align: right; }
+        .BTN-ACT { padding: 5px 8px; font-size: 0.55rem; font-weight: 900; border-radius: 4px; cursor: pointer; border: 1px solid var(--BORDER); background: #fff; }
         .BTN-ACT.DEL { color: var(--RED); border-color: #FECACA; }
-        .BTN-ACT.DEL:hover { background: #FEF2F2; }
-        .BTN-ACT.EDIT:hover { background: #F8FAFC; }
 
-        .NOTIF { 
-            position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
-            background: var(--TEXT); color: white; padding: 10px 20px;
-            border-radius: 30px; font-size: 0.7rem; font-weight: 800;
-            display: none; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
+        /* MODAL */
+        #MODAL-OVERLAY { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 2000; }
+        .MODAL-CONTENT { background: white; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; }
+
+        .NOTIF { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background: var(--TEXT); color: white; padding: 10px 20px; border-radius: 30px; font-size: 0.7rem; font-weight: 800; display: none; z-index: 3000; }
     </style>
 </head>
 <body>
@@ -135,16 +97,8 @@
                 <div class="CARD">
                     <div class="SECTION-TITLE">LOG EXPENSE</div>
                     <form id="F-EXP">
-                        <div class="FIELD">
-                            <label>MANAGER</label>
-                            <input type="text" id="MGR" value="SANDEEP GOND" readonly>
-                        </div>
-                        <div class="FIELD">
-                            <label>DATE</label>
-                            <input type="date" id="E-DATE" required>
-                        </div>
-                        <div class="FIELD">
-                            <label>CATEGORY</label>
+                        <div class="FIELD"><label>DATE</label><input type="date" id="E-DATE" required></div>
+                        <div class="FIELD"><label>CATEGORY</label>
                             <select id="E-CAT" required onchange="TOGGLE_SALARY_FIELD()">
                                 <option value="FUEL">FUEL</option>
                                 <option value="MAINTENANCE">MAINTENANCE</option>
@@ -153,18 +107,9 @@
                                 <option value="OTHER">OTHER</option>
                             </select>
                         </div>
-                        <div class="FIELD" id="E-EMP-BOX" style="display:none">
-                            <label>SELECT EMPLOYEE</label>
-                            <select id="E-EMP"></select>
-                        </div>
-                        <div class="FIELD">
-                            <label>AMOUNT (₹)</label>
-                            <input type="number" id="E-AMT" placeholder="0.00" required>
-                        </div>
-                        <div class="FIELD">
-                            <label>NOTES</label>
-                            <textarea id="E-NOTES"></textarea>
-                        </div>
+                        <div class="FIELD" id="E-EMP-BOX" style="display:none"><label>EMPLOYEE</label><select id="E-EMP"></select></div>
+                        <div class="FIELD"><label>AMOUNT (₹)</label><input type="number" id="E-AMT" required></div>
+                        <div class="FIELD"><label>NOTES</label><textarea id="E-NOTES"></textarea></div>
                         <button type="submit" class="BTN-POST">POST EXPENSE</button>
                     </form>
                 </div>
@@ -172,22 +117,10 @@
                 <div class="CARD">
                     <div class="SECTION-TITLE">RIDER PAYMENT</div>
                     <form id="F-PAY">
-                        <div class="FIELD">
-                            <label>DATE</label>
-                            <input type="date" id="P-DATE" required>
-                        </div>
-                        <div class="FIELD">
-                            <label>RIDER</label>
-                            <select id="P-RIDER" required><option>LOADING...</option></select>
-                        </div>
-                        <div class="FIELD">
-                            <label>AMOUNT (₹)</label>
-                            <input type="number" id="P-AMT" placeholder="0.00" required>
-                        </div>
-                        <div class="FIELD">
-                            <label>NOTES</label>
-                            <textarea id="P-NOTES"></textarea>
-                        </div>
+                        <div class="FIELD"><label>DATE</label><input type="date" id="P-DATE" required></div>
+                        <div class="FIELD"><label>RIDER</label><select id="P-RIDER" required></select></div>
+                        <div class="FIELD"><label>AMOUNT (₹)</label><input type="number" id="P-AMT" required></div>
+                        <div class="FIELD"><label>NOTES</label><textarea id="P-NOTES"></textarea></div>
                         <button type="submit" class="BTN-POST" style="background:var(--GREEN)">LOG PAYMENT</button>
                     </form>
                 </div>
@@ -196,9 +129,24 @@
             <div class="HISTORY-SIDE">
                 <div class="SECTION-TITLE">PAYMENT HISTORY</div>
                 <div class="HISTORY-LIST" id="L-PAY"></div>
-                
                 <div class="SECTION-TITLE" style="margin-top:30px">EXPENSE LOG</div>
                 <div class="HISTORY-LIST" id="L-EXP"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="MODAL-OVERLAY">
+        <div class="MODAL-CONTENT">
+            <div class="SECTION-TITLE">EDIT RECORD</div>
+            <input type="hidden" id="EDIT-ID">
+            <input type="hidden" id="EDIT-TABLE">
+            <div class="FIELD"><label>DATE</label><input type="date" id="EDIT-DATE"></div>
+            <div class="FIELD" id="EDIT-CAT-BOX"><label>CATEGORY / RIDER</label><select id="EDIT-SELECT"></select></div>
+            <div class="FIELD"><label>AMOUNT</label><input type="number" id="EDIT-AMT"></div>
+            <div class="FIELD"><label>NOTES</label><textarea id="EDIT-NOTES"></textarea></div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:20px;">
+                <button class="BTN-POST" style="background:var(--TEXT)" onclick="CLOSE_MODAL()">CANCEL</button>
+                <button class="BTN-POST" onclick="UPDATE_REC()">SAVE</button>
             </div>
         </div>
     </div>
@@ -207,6 +155,7 @@
         const S_URL = 'https://tyhrahuionsvzyuzdtkr.supabase.co';
         const S_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5aHJhaHVpb25zdnp5dXpkdGtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwNzA4MTcsImV4cCI6MjA4MTY0NjgxN30.ypEmevr3XTuyNtJxUSSqCplAdcru9fkE3q15HOQHrVY';
         const _SB = supabase.createClient(S_URL, S_KEY);
+        let GLOBAL_RIDERS = [];
 
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('input[type="date"]').forEach(i => i.value = new Date().toISOString().split('T')[0]);
@@ -214,28 +163,15 @@
         });
 
         function TOGGLE_SALARY_FIELD() {
-            const cat = document.getElementById('E-CAT').value;
-            document.getElementById('E-EMP-BOX').style.display = (cat === 'SALARY') ? 'block' : 'none';
-        }
-
-        async function DELETE_REC(table, id) {
-            if(!confirm("DELETE THIS RECORD?")) return;
-            const { error } = await _SB.from(table).delete().eq('id', id);
-            if(error) { NOTIFY("ERROR"); } else { NOTIFY("DELETED"); FETCH_ALL_DATA(); }
-        }
-
-        async function EDIT_AMT(table, id, oldAmt) {
-            const val = prompt("NEW AMOUNT:", oldAmt);
-            if(val === null || val === "") return;
-            const { error } = await _SB.from(table).update({ amount: val }).eq('id', id);
-            if(error) { NOTIFY("ERROR"); } else { NOTIFY("UPDATED"); FETCH_ALL_DATA(); }
+            document.getElementById('E-EMP-BOX').style.display = (document.getElementById('E-CAT').value === 'SALARY') ? 'block' : 'none';
         }
 
         async function FETCH_ALL_DATA() {
             const { data: riders } = await _SB.from('employees').select('id, name').eq('position', 'RIDER');
-            if (riders) riders.push({ id: 'ZAID_MANUAL', name: 'ZAID' });
+            GLOBAL_RIDERS = riders || [];
+            GLOBAL_RIDERS.push({ id: 'ZAID_MANUAL', name: 'ZAID' });
 
-            const riderOptions = (riders || []).map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+            const riderOptions = GLOBAL_RIDERS.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
             document.getElementById('P-RIDER').innerHTML = riderOptions;
             document.getElementById('E-EMP').innerHTML = riderOptions;
 
@@ -244,79 +180,76 @@
 
             let tExp = 0, tPay = 0;
             
-            // Render Expenses
             document.getElementById('L-EXP').innerHTML = (exps || []).map(e => {
                 tExp += parseFloat(e.amount);
-                return `
-                <div class="LOG-ITEM">
-                    <div class="LOG-INFO"><div class="LOG-MAIN">${e.category}</div><div class="LOG-SUB">${e.date}</div></div>
-                    <div class="LOG-RIGHT">
-                        <div class="LOG-AMT RED">₹${e.amount}</div>
-                        <div class="LOG-ACTIONS">
-                            <button class="BTN-ACT EDIT" onclick="EDIT_AMT('expenses', ${e.id}, ${e.amount})">EDIT</button>
-                            <button class="BTN-ACT DEL" onclick="DELETE_REC('expenses', ${e.id})">DEL</button>
-                        </div>
-                    </div>
-                </div>`;
-            }).join('') || '<div class="LOG-SUB">NO DATA</div>';
+                return `<div class="LOG-ITEM"><div class="LOG-INFO"><div class="LOG-MAIN">${e.category}</div><div class="LOG-SUB">${e.date}</div></div>
+                <div class="LOG-RIGHT"><div class="LOG-AMT RED">₹${e.amount}</div><button class="BTN-ACT" onclick='OPEN_EDIT("expenses", ${JSON.stringify(e)})'>EDIT</button>
+                <button class="BTN-ACT DEL" onclick="DELETE_REC('expenses', ${e.id})">DEL</button></div></div>`;
+            }).join('');
 
-            // Render Payments
             document.getElementById('L-PAY').innerHTML = (pays || []).map(p => {
                 tPay += parseFloat(p.amount);
-                const rName = riders.find(r => r.id == p.rider_id)?.name || 'RIDER';
-                return `
-                <div class="LOG-ITEM">
-                    <div class="LOG-INFO"><div class="LOG-MAIN">${rName}</div><div class="LOG-SUB">${p.date}</div></div>
-                    <div class="LOG-RIGHT">
-                        <div class="LOG-AMT GREEN">₹${p.amount}</div>
-                        <div class="LOG-ACTIONS">
-                            <button class="BTN-ACT EDIT" onclick="EDIT_AMT('rider_payments', ${p.id}, ${p.amount})">EDIT</button>
-                            <button class="BTN-ACT DEL" onclick="DELETE_REC('rider_payments', ${p.id})">DEL</button>
-                        </div>
-                    </div>
-                </div>`;
-            }).join('') || '<div class="LOG-SUB">NO DATA</div>';
+                const rName = GLOBAL_RIDERS.find(r => r.id == p.rider_id)?.name || 'RIDER';
+                return `<div class="LOG-ITEM"><div class="LOG-INFO"><div class="LOG-MAIN">${rName}</div><div class="LOG-SUB">${p.date}</div></div>
+                <div class="LOG-RIGHT"><div class="LOG-AMT GREEN">₹${p.amount}</div><button class="BTN-ACT" onclick='OPEN_EDIT("rider_payments", ${JSON.stringify(p)})'>EDIT</button>
+                <button class="BTN-ACT DEL" onclick="DELETE_REC('rider_payments', ${p.id})">DEL</button></div></div>`;
+            }).join('');
 
             document.getElementById('VAL-EXP').innerText = tExp.toLocaleString();
             document.getElementById('VAL-REC').innerText = tPay.toLocaleString();
         }
 
+        function OPEN_EDIT(table, data) {
+            document.getElementById('EDIT-ID').value = data.id;
+            document.getElementById('EDIT-TABLE').value = table;
+            document.getElementById('EDIT-DATE').value = data.date;
+            document.getElementById('EDIT-AMT').value = data.amount;
+            document.getElementById('EDIT-NOTES').value = data.notes || '';
+
+            const sel = document.getElementById('EDIT-SELECT');
+            if(table === 'expenses') {
+                sel.innerHTML = `<option value="FUEL">FUEL</option><option value="MAINTENANCE">MAINTENANCE</option><option value="SALARY">SALARY</option><option value="RENT">RENT</option><option value="OTHER">OTHER</option>`;
+                sel.value = data.category;
+            } else {
+                sel.innerHTML = GLOBAL_RIDERS.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+                sel.value = data.rider_id;
+            }
+            document.getElementById('MODAL-OVERLAY').style.display = 'flex';
+        }
+
+        function CLOSE_MODAL() { document.getElementById('MODAL-OVERLAY').style.display = 'none'; }
+
+        async function UPDATE_REC() {
+            const table = document.getElementById('EDIT-TABLE').value;
+            const id = document.getElementById('EDIT-ID').value;
+            const payload = {
+                date: document.getElementById('EDIT-DATE').value,
+                amount: document.getElementById('EDIT-AMT').value,
+                notes: document.getElementById('EDIT-NOTES').value
+            };
+            if(table === 'expenses') payload.category = document.getElementById('EDIT-SELECT').value;
+            else payload.rider_id = document.getElementById('EDIT-SELECT').value;
+
+            const { error } = await _SB.from(table).update(payload).eq('id', id);
+            if(error) NOTIFY("UPDATE FAILED");
+            else { NOTIFY("UPDATED SUCCESS"); CLOSE_MODAL(); FETCH_ALL_DATA(); }
+        }
+
+        async function DELETE_REC(t, id) { if(confirm("DELETE?")) { await _SB.from(t).delete().eq('id', id); FETCH_ALL_DATA(); } }
+
         document.getElementById('F-EXP').onsubmit = async (e) => {
             e.preventDefault();
-            const category = document.getElementById('E-CAT').value;
-            let notes = document.getElementById('E-NOTES').value;
-            if (category === 'SALARY') {
-                const empName = document.getElementById('E-EMP').options[document.getElementById('E-EMP').selectedIndex].text;
-                notes = `[TO: ${empName}] ${notes}`;
-            }
-            await _SB.from('expenses').insert([{
-                date: document.getElementById('E-DATE').value,
-                category: category,
-                amount: document.getElementById('E-AMT').value,
-                manager_name: 'SANDEEP GOND',
-                notes: notes
-            }]);
-            NOTIFY("EXPENSE SAVED");
-            FETCH_ALL_DATA();
+            await _SB.from('expenses').insert([{ date: document.getElementById('E-DATE').value, category: document.getElementById('E-CAT').value, amount: document.getElementById('E-AMT').value, manager_name: 'SANDEEP GOND', notes: document.getElementById('E-NOTES').value }]);
+            NOTIFY("SAVED"); FETCH_ALL_DATA();
         };
 
         document.getElementById('F-PAY').onsubmit = async (e) => {
             e.preventDefault();
-            await _SB.from('rider_payments').insert([{
-                date: document.getElementById('P-DATE').value,
-                rider_id: document.getElementById('P-RIDER').value,
-                amount: document.getElementById('P-AMT').value,
-                notes: document.getElementById('P-NOTES').value
-            }]);
-            NOTIFY("PAYMENT SAVED");
-            FETCH_ALL_DATA();
+            await _SB.from('rider_payments').insert([{ date: document.getElementById('P-DATE').value, rider_id: document.getElementById('P-RIDER').value, amount: document.getElementById('P-AMT').value, notes: document.getElementById('P-NOTES').value }]);
+            NOTIFY("SAVED"); FETCH_ALL_DATA();
         };
 
-        function NOTIFY(m) {
-            const n = document.getElementById('NOTIF');
-            n.innerText = m; n.style.display = 'BLOCK';
-            setTimeout(() => n.style.display = 'NONE', 2000);
-        }
+        function NOTIFY(m) { const n = document.getElementById('NOTIF'); n.innerText = m; n.style.display = 'BLOCK'; setTimeout(() => n.style.display = 'NONE', 2000); }
     </script>
 </body>
 </html>
