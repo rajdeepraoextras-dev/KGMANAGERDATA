@@ -64,8 +64,6 @@
         .BTN-ACT { padding: 4px 10px; font-size: 0.55rem; font-weight: 900; border-radius: 4px; cursor: pointer; border: 1px solid var(--BORDER); background: #fff; }
         .BTN-ACT.DEL { color: var(--RED); border-color: #FECACA; }
 
-        #MODAL-OVERLAY { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 2000; }
-        .MODAL-CONTENT { background: white; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; }
         .NOTIF { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background: var(--TEXT); color: white; padding: 10px 20px; border-radius: 30px; font-size: 0.7rem; font-weight: 800; display: none; z-index: 3000; }
     </style>
 </head>
@@ -87,23 +85,6 @@
 
         <div class="MAIN-GRID">
             <div class="INPUT-SIDE">
-                <div class="CARD">
-                    <div class="SECTION-TITLE">MONEY TRANSFER</div>
-                    <form id="F-TRA">
-                        <div class="FIELD"><label>DATE</label><input type="date" id="T-DATE" required></div>
-                        <div class="FIELD"><label>TO</label>
-                            <select id="T-TO" required>
-                                <option value="RAJDEEP RAO">RAJDEEP RAO</option>
-                                <option value="ZAID">ZAID</option>
-                                <option value="OWNER">OWNER</option>
-                            </select>
-                        </div>
-                        <div class="FIELD"><label>AMOUNT (₹)</label><input type="number" id="T-AMT" required></div>
-                        <div class="FIELD"><label>NOTES</label><textarea id="T-NOTES" placeholder="TRANSFER DETAILS..."></textarea></div>
-                        <button type="submit" class="BTN-POST" style="background:var(--PURPLE)">POST TRANSFER</button>
-                    </form>
-                </div>
-
                 <div class="CARD">
                     <div class="SECTION-TITLE">LOG EXPENSE</div>
                     <form id="F-EXP">
@@ -132,6 +113,23 @@
                         <div class="FIELD"><label>AMOUNT (₹)</label><input type="number" id="P-AMT" required></div>
                         <div class="FIELD"><label>NOTES</label><textarea id="P-NOTES"></textarea></div>
                         <button type="submit" class="BTN-POST" style="background:var(--GREEN)">LOG PAYMENT</button>
+                    </form>
+                </div>
+
+                <div class="CARD">
+                    <div class="SECTION-TITLE">MONEY TRANSFER</div>
+                    <form id="F-TRA">
+                        <div class="FIELD"><label>DATE</label><input type="date" id="T-DATE" required></div>
+                        <div class="FIELD"><label>TO</label>
+                            <select id="T-TO" required>
+                                <option value="RAJDEEP RAO">RAJDEEP RAO</option>
+                                <option value="ZAID">ZAID</option>
+                                <option value="OWNER">OWNER</option>
+                            </select>
+                        </div>
+                        <div class="FIELD"><label>AMOUNT (₹)</label><input type="number" id="T-AMT" required></div>
+                        <div class="FIELD"><label>NOTES</label><textarea id="T-NOTES" placeholder="TRANSFER DETAILS..."></textarea></div>
+                        <button type="submit" class="BTN-POST" style="background:var(--PURPLE)">POST TRANSFER</button>
                     </form>
                 </div>
             </div>
@@ -172,7 +170,6 @@
 
             let tExp = 0, tPay = 0, tTra = 0;
             
-            // RENDER LOGS
             document.getElementById('L-EXP').innerHTML = (exps || []).map(e => { tExp += parseFloat(e.amount); return renderLog(e, e.category, 'RED'); }).join('');
             document.getElementById('L-PAY').innerHTML = (pays || []).map(p => { tPay += parseFloat(p.amount); const rName = GLOBAL_RIDERS.find(r => r.id == p.rider_id)?.name || 'RIDER'; return renderLog(p, rName, 'GREEN'); }).join('');
             document.getElementById('L-TRA').innerHTML = (tras || []).map(t => { tTra += parseFloat(t.amount); return renderLog(t, `TO: ${t.transfer_to}`, 'PURPLE'); }).join('');
@@ -185,9 +182,10 @@
         }
 
         function renderLog(item, title, colorClass) {
+            const table = item.transfer_to ? 'money_transfers' : (item.category ? 'expenses' : 'rider_payments');
             return `<div class="LOG-ITEM"><div class="LOG-ROW"><div><div class="LOG-MAIN">${title}</div><div class="LOG-SUB">${item.date}</div></div><div class="LOG-AMT ${colorClass}">₹${item.amount}</div></div>
             ${item.notes ? `<div class="LOG-NOTES">${item.notes}</div>` : ''}
-            <div class="ACTIONS"><button class="BTN-ACT DEL" onclick="DELETE_REC('${item.transfer_to ? 'money_transfers' : (item.category ? 'expenses' : 'rider_payments')}', ${item.id})">DEL</button></div></div>`;
+            <div class="ACTIONS"><button class="BTN-ACT DEL" onclick="DELETE_REC('${table}', ${item.id})">DEL</button></div></div>`;
         }
 
         async function DELETE_REC(t, id) { if(confirm("DELETE?")) { await _SB.from(t).delete().eq('id', id); FETCH_ALL_DATA(); } }
