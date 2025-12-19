@@ -133,13 +133,17 @@
                         </div>
                         <div class="FIELD">
                             <label>CATEGORY</label>
-                            <select id="E-CAT" required>
+                            <select id="E-CAT" required onchange="TOGGLE_SALARY_FIELD()">
                                 <option value="FUEL">FUEL</option>
                                 <option value="MAINTENANCE">MAINTENANCE</option>
                                 <option value="SALARY">SALARY</option>
                                 <option value="RENT">RENT</option>
                                 <option value="OTHER">OTHER</option>
                             </select>
+                        </div>
+                        <div class="FIELD" id="E-EMP-BOX" style="display:none">
+                            <label>SELECT EMPLOYEE</label>
+                            <select id="E-EMP"></select>
                         </div>
                         <div class="FIELD">
                             <label>AMOUNT (₹)</label>
@@ -197,9 +201,22 @@
             FETCH_ALL_DATA();
         });
 
+        function TOGGLE_SALARY_FIELD() {
+            const cat = document.getElementById('E-CAT').value;
+            document.getElementById('E-EMP-BOX').style.display = (cat === 'SALARY') ? 'block' : 'none';
+        }
+
         async function FETCH_ALL_DATA() {
             const { data: riders } = await _SB.from('employees').select('id, name').eq('position', 'RIDER');
-            document.getElementById('P-RIDER').innerHTML = riders.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+            
+            // ADDING ZAID MANUALLY TO THE LIST
+            if (riders) {
+                riders.push({ id: 'ZAID_MANUAL', name: 'ZAID' });
+            }
+
+            const riderOptions = riders.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+            document.getElementById('P-RIDER').innerHTML = riderOptions;
+            document.getElementById('E-EMP').innerHTML = riderOptions;
 
             const { data: exps } = await _SB.from('expenses').select('*').order('date', {ascending: false}).limit(8);
             const { data: pays } = await _SB.from('rider_payments').select('*').order('date', {ascending: false}).limit(8);
@@ -224,12 +241,21 @@
 
         document.getElementById('F-EXP').onsubmit = async (e) => {
             e.preventDefault();
+            const category = document.getElementById('E-CAT').value;
+            let notes = document.getElementById('E-NOTES').value;
+            
+            // If Salary, prepend employee name to notes for record keeping
+            if (category === 'SALARY') {
+                const empName = document.getElementById('E-EMP').options[document.getElementById('E-EMP').selectedIndex].text;
+                notes = `[TO: ${empName}] ${notes}`;
+            }
+
             await _SB.from('expenses').insert([{
                 date: document.getElementById('E-DATE').value,
-                category: document.getElementById('E-CAT').value,
+                category: category,
                 amount: document.getElementById('E-AMT').value,
                 manager_name: 'SANDEEP GOND',
-                notes: document.getElementById('E-NOTES').value
+                notes: notes
             }]);
             NOTIFY("EXPENSE SAVED");
             FETCH_ALL_DATA();
