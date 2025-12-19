@@ -78,16 +78,28 @@
         }
         .BTN-POST:hover { background: var(--ORANGE-DEEP); transform: translateY(-1px); }
 
-        /* HISTORY COMPACT VIEW */
+        /* HISTORY LIST WITH ACTIONS */
         .HISTORY-LIST { display: flex; flex-direction: column; gap: 8px; }
         .LOG-ITEM { 
-            background: var(--CARD); border: 1px solid var(--BORDER); padding: 12px; 
+            background: var(--CARD); border: 1px solid var(--BORDER); padding: 10px 12px; 
             border-radius: 8px; display: flex; justify-content: space-between; align-items: center;
         }
         .LOG-INFO { display: flex; flex-direction: column; }
-        .LOG-MAIN { font-size: 0.8rem; font-weight: 800; }
-        .LOG-SUB { font-size: 0.6rem; color: var(--TEXT-LIGHT); }
-        .LOG-AMT { font-weight: 900; font-size: 0.9rem; }
+        .LOG-MAIN { font-size: 0.75rem; font-weight: 800; }
+        .LOG-SUB { font-size: 0.55rem; color: var(--TEXT-LIGHT); font-weight: 600; }
+        
+        .LOG-RIGHT { display: flex; align-items: center; gap: 12px; }
+        .LOG-AMT { font-weight: 900; font-size: 0.85rem; min-width: 60px; text-align: right; }
+        
+        .LOG-ACTIONS { display: flex; gap: 5px; }
+        .BTN-ACT { 
+            padding: 5px 8px; font-size: 0.55rem; font-weight: 900; 
+            border-radius: 4px; cursor: pointer; border: 1px solid var(--BORDER);
+            background: #fff; transition: 0.2s;
+        }
+        .BTN-ACT.DEL { color: var(--RED); border-color: #FECACA; }
+        .BTN-ACT.DEL:hover { background: #FEF2F2; }
+        .BTN-ACT.EDIT:hover { background: #F8FAFC; }
 
         .NOTIF { 
             position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
@@ -206,33 +218,63 @@
             document.getElementById('E-EMP-BOX').style.display = (cat === 'SALARY') ? 'block' : 'none';
         }
 
+        async function DELETE_REC(table, id) {
+            if(!confirm("DELETE THIS RECORD?")) return;
+            const { error } = await _SB.from(table).delete().eq('id', id);
+            if(error) { NOTIFY("ERROR"); } else { NOTIFY("DELETED"); FETCH_ALL_DATA(); }
+        }
+
+        async function EDIT_AMT(table, id, oldAmt) {
+            const val = prompt("NEW AMOUNT:", oldAmt);
+            if(val === null || val === "") return;
+            const { error } = await _SB.from(table).update({ amount: val }).eq('id', id);
+            if(error) { NOTIFY("ERROR"); } else { NOTIFY("UPDATED"); FETCH_ALL_DATA(); }
+        }
+
         async function FETCH_ALL_DATA() {
             const { data: riders } = await _SB.from('employees').select('id, name').eq('position', 'RIDER');
-            
-            // ADDING ZAID MANUALLY TO THE LIST
-            if (riders) {
-                riders.push({ id: 'ZAID_MANUAL', name: 'ZAID' });
-            }
+            if (riders) riders.push({ id: 'ZAID_MANUAL', name: 'ZAID' });
 
-            const riderOptions = riders.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+            const riderOptions = (riders || []).map(r => `<option value="${r.id}">${r.name}</option>`).join('');
             document.getElementById('P-RIDER').innerHTML = riderOptions;
             document.getElementById('E-EMP').innerHTML = riderOptions;
 
-            const { data: exps } = await _SB.from('expenses').select('*').order('date', {ascending: false}).limit(8);
-            const { data: pays } = await _SB.from('rider_payments').select('*').order('date', {ascending: false}).limit(8);
+            const { data: exps } = await _SB.from('expenses').select('*').order('date', {ascending: false}).limit(10);
+            const { data: pays } = await _SB.from('rider_payments').select('*').order('date', {ascending: false}).limit(10);
 
-            // RENDER STATS & LISTS
             let tExp = 0, tPay = 0;
             
-            document.getElementById('L-EXP').innerHTML = exps.map(e => {
+            // Render Expenses
+            document.getElementById('L-EXP').innerHTML = (exps || []).map(e => {
                 tExp += parseFloat(e.amount);
-                return `<div class="LOG-ITEM"><div class="LOG-INFO"><div class="LOG-MAIN">${e.category}</div><div class="LOG-SUB">${e.date}</div></div><div class="LOG-AMT RED">₹${e.amount}</div></div>`;
+                return `
+                <div class="LOG-ITEM">
+                    <div class="LOG-INFO"><div class="LOG-MAIN">${e.category}</div><div class="LOG-SUB">${e.date}</div></div>
+                    <div class="LOG-RIGHT">
+                        <div class="LOG-AMT RED">₹${e.amount}</div>
+                        <div class="LOG-ACTIONS">
+                            <button class="BTN-ACT EDIT" onclick="EDIT_AMT('expenses', ${e.id}, ${e.amount})">EDIT</button>
+                            <button class="BTN-ACT DEL" onclick="DELETE_REC('expenses', ${e.id})">DEL</button>
+                        </div>
+                    </div>
+                </div>`;
             }).join('') || '<div class="LOG-SUB">NO DATA</div>';
 
-            document.getElementById('L-PAY').innerHTML = pays.map(p => {
+            // Render Payments
+            document.getElementById('L-PAY').innerHTML = (pays || []).map(p => {
                 tPay += parseFloat(p.amount);
                 const rName = riders.find(r => r.id == p.rider_id)?.name || 'RIDER';
-                return `<div class="LOG-ITEM"><div class="LOG-INFO"><div class="LOG-MAIN">${rName}</div><div class="LOG-SUB">${p.date}</div></div><div class="LOG-AMT GREEN">₹${p.amount}</div></div>`;
+                return `
+                <div class="LOG-ITEM">
+                    <div class="LOG-INFO"><div class="LOG-MAIN">${rName}</div><div class="LOG-SUB">${p.date}</div></div>
+                    <div class="LOG-RIGHT">
+                        <div class="LOG-AMT GREEN">₹${p.amount}</div>
+                        <div class="LOG-ACTIONS">
+                            <button class="BTN-ACT EDIT" onclick="EDIT_AMT('rider_payments', ${p.id}, ${p.amount})">EDIT</button>
+                            <button class="BTN-ACT DEL" onclick="DELETE_REC('rider_payments', ${p.id})">DEL</button>
+                        </div>
+                    </div>
+                </div>`;
             }).join('') || '<div class="LOG-SUB">NO DATA</div>';
 
             document.getElementById('VAL-EXP').innerText = tExp.toLocaleString();
@@ -243,13 +285,10 @@
             e.preventDefault();
             const category = document.getElementById('E-CAT').value;
             let notes = document.getElementById('E-NOTES').value;
-            
-            // If Salary, prepend employee name to notes for record keeping
             if (category === 'SALARY') {
                 const empName = document.getElementById('E-EMP').options[document.getElementById('E-EMP').selectedIndex].text;
                 notes = `[TO: ${empName}] ${notes}`;
             }
-
             await _SB.from('expenses').insert([{
                 date: document.getElementById('E-DATE').value,
                 category: category,
