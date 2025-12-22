@@ -18,7 +18,9 @@
             --BLUE: #3B82F6;
         }
 
+        /* Enforce uppercase everywhere visually */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; text-transform: uppercase; }
+        
         body { background: var(--BG); color: var(--TEXT); padding: 15px; line-height: 1.5; }
         .CONTAINER { max-width: 1200px; margin: 0 auto; }
 
@@ -44,16 +46,17 @@
         .SECTION-TITLE { font-size: 0.85rem; font-weight: 900; color: var(--ORANGE); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
         .SECTION-TITLE::after { content: ''; flex: 1; height: 2px; background: var(--BORDER); opacity: 0.5; }
         
-        /* BIGGER CARDS */
         .CARD { background: var(--CARD); border: 1px solid var(--BORDER); border-radius: 16px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
         
         .FIELD { margin-bottom: 18px; }
         label { display: block; font-size: 0.7rem; font-weight: 800; color: var(--TEXT-LIGHT); margin-bottom: 8px; letter-spacing: 0.5px; }
         
-        /* BIGGER INPUTS */
         input, select, textarea { width: 100%; padding: 14px; border: 2px solid var(--BORDER); border-radius: 8px; font-size: 0.95rem; font-weight: 700; color: var(--TEXT); background: #fff; transition: border-color 0.2s; }
         input:focus, select:focus, textarea:focus { border-color: var(--TEXT); outline: none; }
         
+        /* Ensure typed text appears uppercase immediately */
+        textarea { text-transform: uppercase; }
+
         .BTN-POST { width: 100%; padding: 18px; border: none; border-radius: 8px; font-weight: 900; font-size: 0.9rem; cursor: pointer; color: white; background: var(--ORANGE); transition: 0.3s; margin-top: 10px; }
         .BTN-POST:active { transform: scale(0.98); }
 
@@ -62,7 +65,7 @@
         .LOG-ROW { display: flex; justify-content: space-between; align-items: flex-start; }
         .LOG-MAIN { font-size: 0.9rem; font-weight: 900; color: var(--TEXT); }
         .LOG-SUB { font-size: 0.7rem; color: var(--TEXT-LIGHT); font-weight: 700; margin-top: 4px; }
-        .LOG-NOTES { font-size: 0.75rem; background: #F1F5F9; padding: 10px; border-radius: 6px; color: var(--TEXT-LIGHT); text-transform: none; border-left: 4px solid var(--BORDER); }
+        .LOG-NOTES { font-size: 0.75rem; background: #F1F5F9; padding: 10px; border-radius: 6px; color: var(--TEXT-LIGHT); text-transform: uppercase; border-left: 4px solid var(--BORDER); }
         .LOG-AMT { font-weight: 900; font-size: 1.1rem; }
         
         .ACTIONS { display: flex; gap: 8px; margin-top: 5px; }
@@ -158,7 +161,7 @@
             GLOBAL_RIDERS = riders || [];
             document.getElementById('P-RIDER').innerHTML = GLOBAL_RIDERS.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
 
-            // 2. Fetch Staffs (for Expense Form - New Requirement)
+            // 2. Fetch Staffs (for Expense Form)
             const { data: staffs } = await _SB.from('staffs').select('id, name');
             GLOBAL_STAFF = staffs || [];
             document.getElementById('E-STAFF').innerHTML = `<option value="">-- GENERAL EXPENSE --</option>` + 
@@ -173,11 +176,7 @@
             // Render Expense Log
             document.getElementById('L-EXP').innerHTML = (exps || []).map(e => { 
                 tExp += parseFloat(e.amount); 
-                // Display Category AND Staff name if available (stored in e.notes or we append to title)
-                let title = e.category;
-                // Since we don't have a dedicated staff column in expenses table schema typically, we assume it's just category
-                // If you updated schema to have staff_name, we could show it. For now, we show Category.
-                return renderLog(e, title, 'RED'); 
+                return renderLog(e, e.category, 'RED'); 
             }).join('');
 
             // Render Payment Log
@@ -222,9 +221,9 @@
         document.getElementById('F-EXP').onsubmit = async (e) => {
             e.preventDefault();
             const staffName = document.getElementById('E-STAFF').value;
-            const rawNotes = document.getElementById('E-NOTES').value;
+            // FORCE UPPERCASE HERE
+            const rawNotes = document.getElementById('E-NOTES').value.toUpperCase(); 
             
-            // Combine Staff Name into notes if selected, so it's saved even if no specific column exists
             const finalNotes = staffName ? `[${staffName}] ${rawNotes}` : rawNotes;
 
             await _SB.from('expenses').insert([{ 
@@ -242,11 +241,14 @@
 
         document.getElementById('F-PAY').onsubmit = async (e) => {
             e.preventDefault();
+            // FORCE UPPERCASE HERE
+            const noteText = document.getElementById('P-NOTES').value.toUpperCase();
+
             await _SB.from('rider_payments').insert([{ 
                 date: document.getElementById('P-DATE').value, 
                 rider_id: document.getElementById('P-RIDER').value, 
                 amount: document.getElementById('P-AMT').value, 
-                notes: document.getElementById('P-NOTES').value 
+                notes: noteText
             }]);
             
             NOTIFY("PAYMENT LOGGED"); 
