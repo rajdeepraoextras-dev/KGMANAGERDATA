@@ -46,15 +46,16 @@
         .SECTION-TITLE { font-size: 0.85rem; font-weight: 900; color: var(--ORANGE); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
         .SECTION-TITLE::after { content: ''; flex: 1; height: 2px; background: var(--BORDER); opacity: 0.5; }
         
+        /* BIG CARDS */
         .CARD { background: var(--CARD); border: 1px solid var(--BORDER); border-radius: 16px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
         
         .FIELD { margin-bottom: 18px; }
         label { display: block; font-size: 0.7rem; font-weight: 800; color: var(--TEXT-LIGHT); margin-bottom: 8px; letter-spacing: 0.5px; }
         
+        /* BIG INPUTS */
         input, select, textarea { width: 100%; padding: 14px; border: 2px solid var(--BORDER); border-radius: 8px; font-size: 0.95rem; font-weight: 700; color: var(--TEXT); background: #fff; transition: border-color 0.2s; }
         input:focus, select:focus, textarea:focus { border-color: var(--TEXT); outline: none; }
         
-        /* Ensure typed text appears uppercase immediately */
         textarea { text-transform: uppercase; }
 
         .BTN-POST { width: 100%; padding: 18px; border: none; border-radius: 8px; font-weight: 900; font-size: 0.9rem; cursor: pointer; color: white; background: var(--ORANGE); transition: 0.3s; margin-top: 10px; }
@@ -109,9 +110,9 @@
                         </div>
                         
                         <div class="FIELD">
-                            <label>EMPLOYEE (FROM STAFFS)</label>
+                            <label>EMPLOYEE (FROM STAFFS TABLE)</label>
                             <select id="E-STAFF">
-                                <option value="">-- SELECT STAFF --</option>
+                                <option value="">LOADING...</option>
                             </select>
                         </div>
 
@@ -148,7 +149,6 @@
         const _SB = supabase.createClient(S_URL, S_KEY);
         
         let GLOBAL_RIDERS = [];
-        let GLOBAL_STAFF = [];
 
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('input[type="date"]').forEach(i => i.value = new Date().toISOString().split('T')[0]);
@@ -156,37 +156,39 @@
         });
 
         async function FETCH_ALL_DATA() {
-            // 1. Fetch Riders (for Payment Form)
+            // 1. FETCH RIDERS (for Payment Form)
             const { data: riders } = await _SB.from('employees').select('id, name').eq('position', 'RIDER');
             GLOBAL_RIDERS = riders || [];
             document.getElementById('P-RIDER').innerHTML = GLOBAL_RIDERS.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
 
-            // 2. Fetch Staffs (for Expense Form)
-            const { data: staffs } = await _SB.from('staffs').select('id, name');
-            GLOBAL_STAFF = staffs || [];
-            document.getElementById('E-STAFF').innerHTML = `<option value="">-- GENERAL EXPENSE --</option>` + 
-                GLOBAL_STAFF.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+            // 2. FETCH STAFFS (Explicitly selecting NAME from STAFFS table)
+            const { data: staffs } = await _SB.from('staffs').select('name');
+            const staffList = staffs || [];
+            
+            // Populate Dropdown using the 'name' column
+            document.getElementById('E-STAFF').innerHTML = `<option value="">-- NO SPECIFIC STAFF --</option>` + 
+                staffList.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
 
-            // 3. Fetch Logs
+            // 3. FETCH LOGS
             const { data: exps } = await _SB.from('expenses').select('*').order('date', {ascending: false});
             const { data: pays } = await _SB.from('rider_payments').select('*').order('date', {ascending: false});
 
             let tExp = 0, tPay = 0;
             
-            // Render Expense Log
+            // RENDER EXPENSES
             document.getElementById('L-EXP').innerHTML = (exps || []).map(e => { 
                 tExp += parseFloat(e.amount); 
                 return renderLog(e, e.category, 'RED'); 
             }).join('');
 
-            // Render Payment Log
+            // RENDER PAYMENTS
             document.getElementById('L-PAY').innerHTML = (pays || []).map(p => { 
                 tPay += parseFloat(p.amount); 
                 const rName = GLOBAL_RIDERS.find(r => r.id == p.rider_id)?.name || 'RIDER'; 
                 return renderLog(p, rName, 'GREEN'); 
             }).join('');
 
-            // Update Stats
+            // UPDATE STATS
             const net = tPay - tExp;
             document.getElementById('VAL-EXP').innerText = tExp.toLocaleString();
             document.getElementById('VAL-REC').innerText = tPay.toLocaleString();
@@ -224,6 +226,7 @@
             // FORCE UPPERCASE HERE
             const rawNotes = document.getElementById('E-NOTES').value.toUpperCase(); 
             
+            // If staff is selected, prepend it to notes
             const finalNotes = staffName ? `[${staffName}] ${rawNotes}` : rawNotes;
 
             await _SB.from('expenses').insert([{ 
