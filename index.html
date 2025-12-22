@@ -29,8 +29,9 @@
 
         .BTN-REFRESH { background: var(--TEXT); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 0.75rem; font-weight: 800; cursor: pointer; }
 
-        .STATS { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
-        @media (max-width: 600px) { .STATS { grid-template-columns: 1fr; } }
+        /* UPDATED STATS GRID FOR 4 ITEMS */
+        .STATS { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px; }
+        @media (max-width: 900px) { .STATS { grid-template-columns: repeat(2, 1fr); } } /* 2x2 on Mobile */
         
         .STAT-CARD { background: var(--CARD); padding: 20px; border-radius: 12px; border: 1px solid var(--BORDER); text-align: center; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
         .STAT-LABEL { font-size: 0.7rem; color: var(--TEXT-LIGHT); font-weight: 800; margin-bottom: 8px; letter-spacing: 1px; }
@@ -38,6 +39,7 @@
         .STAT-VALUE.RED { color: var(--RED); }
         .STAT-VALUE.GREEN { color: var(--GREEN); }
         .STAT-VALUE.BLUE { color: var(--BLUE); }
+        .STAT-VALUE.PURPLE { color: var(--PURPLE); }
 
         .MAIN-GRID { display: grid; grid-template-columns: 1fr; gap: 30px; }
         @media (min-width: 900px) { .MAIN-GRID { grid-template-columns: 400px 1fr; } }
@@ -84,8 +86,9 @@
         <div id="NOTIF" class="NOTIF"></div>
 
         <div class="STATS">
-            <div class="STAT-CARD"><div class="STAT-LABEL">TOTAL EXPENSE</div><div class="STAT-VALUE RED">₹<span id="VAL-EXP">0</span></div></div>
             <div class="STAT-CARD"><div class="STAT-LABEL">TOTAL RECEIVED</div><div class="STAT-VALUE GREEN">₹<span id="VAL-REC">0</span></div></div>
+            <div class="STAT-CARD"><div class="STAT-LABEL">TOTAL EXPENSE</div><div class="STAT-VALUE RED">₹<span id="VAL-EXP">0</span></div></div>
+            <div class="STAT-CARD"><div class="STAT-LABEL">NET TRANSFER</div><div class="STAT-VALUE PURPLE">₹<span id="VAL-TRA">0</span></div></div>
             <div class="STAT-CARD"><div class="STAT-LABEL">NET BALANCE</div><div class="STAT-VALUE BLUE">₹<span id="VAL-NET">0</span></div></div>
         </div>
 
@@ -127,19 +130,16 @@
                     <div class="SECTION-TITLE">TRANSFER MONEY</div>
                     <form id="F-TRA">
                         <div class="FIELD"><label>DATE</label><input type="date" id="T-DATE" required></div>
-                        
                         <div class="FIELD"><label>TO (OWNER)</label>
                             <select id="T-TO" required>
                                 <option value="RAJDEEP RAO">RAJDEEP RAO</option>
                             </select>
                         </div>
-
                         <div class="FIELD"><label>FROM (STAFF)</label>
                             <select id="T-FROM" required>
                                 <option value="">LOADING...</option>
                             </select>
                         </div>
-
                         <div class="FIELD"><label>AMOUNT (₹)</label><input type="number" id="T-AMT" required></div>
                         <div class="FIELD"><label>NOTES</label><textarea id="T-NOTES" rows="2"></textarea></div>
                         <button type="submit" class="BTN-POST" style="background:var(--PURPLE)">POST TRANSFER</button>
@@ -178,7 +178,7 @@
             GLOBAL_RIDERS = riders || [];
             document.getElementById('P-RIDER').innerHTML = GLOBAL_RIDERS.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
 
-            // 2. FETCH STAFFS (For Expense AND Transfer)
+            // 2. FETCH STAFFS
             const { data: staffs } = await _SB.from('staffs').select('name');
             const staffList = staffs || [];
             const staffOptions = staffList.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
@@ -198,12 +198,15 @@
             document.getElementById('L-PAY').innerHTML = (pays || []).map(p => { tPay += parseFloat(p.amount); const rName = GLOBAL_RIDERS.find(r => r.id == p.rider_id)?.name || 'RIDER'; return renderLog(p, rName, 'GREEN'); }).join('');
             document.getElementById('L-TRA').innerHTML = (tras || []).map(t => { tTra += parseFloat(t.amount); return renderLog(t, `TO: ${t.transfer_to}`, 'PURPLE', `FROM: ${t.transfer_from}`); }).join('');
 
-            // UPDATE STATS: Net = Received - Expenses - Transfers
+            // UPDATE STATS
             const net = tPay - tExp - tTra;
-            document.getElementById('VAL-EXP').innerText = tExp.toLocaleString();
+            
             document.getElementById('VAL-REC').innerText = tPay.toLocaleString();
+            document.getElementById('VAL-EXP').innerText = tExp.toLocaleString();
+            document.getElementById('VAL-TRA').innerText = tTra.toLocaleString(); // NEW STAT
+            
             document.getElementById('VAL-NET').innerText = net.toLocaleString();
-            document.getElementById('VAL-NET').className = `STAT-VALUE ${net >= 0 ? 'GREEN' : 'RED'}`;
+            document.getElementById('VAL-NET').className = `STAT-VALUE ${net >= 0 ? 'BLUE' : 'RED'}`;
         }
 
         function renderLog(item, title, colorClass, subTitleOverride) {
@@ -232,8 +235,6 @@
                 FETCH_ALL_DATA(); 
             } 
         }
-
-        // --- SUBMIT HANDLERS ---
 
         document.getElementById('F-EXP').onsubmit = async (e) => {
             e.preventDefault();
