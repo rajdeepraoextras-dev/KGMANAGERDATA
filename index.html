@@ -533,6 +533,265 @@
             margin-bottom: 8px;
         }
 
+        /* DETAILED HISTORY CARDS - EASY TO READ */
+        .DETAIL-CARD {
+            background: var(--CARD);
+            border: 2px solid var(--BORDER-LIGHT);
+            border-radius: var(--RADIUS);
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--SHADOW);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .DETAIL-CARD::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+        }
+        
+        .DETAIL-CARD.GREEN::before { background: var(--GREEN); }
+        .DETAIL-CARD.RED::before { background: var(--RED); }
+        .DETAIL-CARD.PURPLE::before { background: var(--PURPLE); }
+        
+        .DETAIL-CARD-HEADER {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed var(--BORDER);
+        }
+        
+        .DETAIL-CARD-TYPE {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .DETAIL-CARD-ICON {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 800;
+        }
+        
+        .DETAIL-CARD-ICON.GREEN { background: var(--GREEN-BG); color: var(--GREEN); }
+        .DETAIL-CARD-ICON.RED { background: var(--RED-BG); color: var(--RED); }
+        .DETAIL-CARD-ICON.PURPLE { background: var(--PURPLE-BG); color: var(--PURPLE); }
+        
+        .DETAIL-CARD-TITLE {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--TEXT);
+            margin-bottom: 2px;
+        }
+        
+        .DETAIL-CARD-SUBTITLE {
+            font-size: 0.7rem;
+            color: var(--TEXT-LIGHT);
+            font-weight: 600;
+        }
+        
+        .DETAIL-CARD-AMOUNT {
+            text-align: right;
+        }
+        
+        .DETAIL-CARD-AMOUNT-LABEL {
+            font-size: 0.6rem;
+            color: var(--TEXT-LIGHT);
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        .DETAIL-CARD-AMOUNT-VALUE {
+            font-size: 1.4rem;
+            font-weight: 900;
+        }
+        
+        .DETAIL-CARD-AMOUNT-VALUE.GREEN { color: var(--GREEN); }
+        .DETAIL-CARD-AMOUNT-VALUE.RED { color: var(--RED); }
+        .DETAIL-CARD-AMOUNT-VALUE.PURPLE { color: var(--PURPLE); }
+        
+        .DETAIL-CARD-BODY {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .DETAIL-CARD-FIELD {
+            background: var(--BG);
+            padding: 10px 12px;
+            border-radius: 10px;
+        }
+        
+        .DETAIL-CARD-FIELD.FULL {
+            grid-column: 1 / -1;
+        }
+        
+        .DETAIL-CARD-FIELD-LABEL {
+            font-size: 0.55rem;
+            color: var(--TEXT-LIGHT);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .DETAIL-CARD-FIELD-LABEL svg {
+            width: 12px;
+            height: 12px;
+            fill: var(--TEXT-LIGHT);
+        }
+        
+        .DETAIL-CARD-FIELD-VALUE {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--TEXT);
+            word-break: break-word;
+        }
+        
+        .DETAIL-CARD-FIELD-VALUE.EMPTY {
+            color: var(--TEXT-LIGHT);
+            font-style: italic;
+        }
+        
+        .DETAIL-CARD-FOOTER {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--BORDER-LIGHT);
+        }
+        
+        .DETAIL-CARD-ID {
+            font-size: 0.6rem;
+            color: var(--TEXT-LIGHT);
+            font-weight: 600;
+        }
+        
+        .DETAIL-CARD-DELETE {
+            background: var(--RED-BG);
+            color: var(--RED);
+            border: 1px solid var(--RED);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .DETAIL-CARD-DELETE:hover {
+            background: var(--RED);
+            color: white;
+        }
+        
+        .DETAIL-CARD-DELETE svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+        
+        /* SECTION SUMMARY BOX */
+        .SECTION-SUMMARY {
+            background: linear-gradient(135deg, var(--ORANGE-GLOW) 0%, rgba(255, 107, 0, 0.05) 100%);
+            border: 2px solid var(--ORANGE);
+            border-radius: var(--RADIUS);
+            padding: 16px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .SECTION-SUMMARY.GREEN {
+            background: linear-gradient(135deg, var(--GREEN-BG) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border-color: var(--GREEN);
+        }
+        
+        .SECTION-SUMMARY.RED {
+            background: linear-gradient(135deg, var(--RED-BG) 0%, rgba(239, 68, 68, 0.05) 100%);
+            border-color: var(--RED);
+        }
+        
+        .SECTION-SUMMARY.PURPLE {
+            background: linear-gradient(135deg, var(--PURPLE-BG) 0%, rgba(139, 92, 246, 0.05) 100%);
+            border-color: var(--PURPLE);
+        }
+        
+        .SECTION-SUMMARY-LEFT {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .SECTION-SUMMARY-ICON {
+            width: 48px;
+            height: 48px;
+            background: var(--ORANGE);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .SECTION-SUMMARY.GREEN .SECTION-SUMMARY-ICON { background: var(--GREEN); }
+        .SECTION-SUMMARY.RED .SECTION-SUMMARY-ICON { background: var(--RED); }
+        .SECTION-SUMMARY.PURPLE .SECTION-SUMMARY-ICON { background: var(--PURPLE); }
+        
+        .SECTION-SUMMARY-ICON svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+        
+        .SECTION-SUMMARY-TEXT {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--TEXT);
+        }
+        
+        .SECTION-SUMMARY-COUNT {
+            font-size: 0.65rem;
+            color: var(--TEXT-LIGHT);
+            font-weight: 600;
+        }
+        
+        .SECTION-SUMMARY-TOTAL {
+            text-align: right;
+        }
+        
+        .SECTION-SUMMARY-TOTAL-LABEL {
+            font-size: 0.6rem;
+            color: var(--TEXT-LIGHT);
+            font-weight: 600;
+        }
+        
+        .SECTION-SUMMARY-TOTAL-VALUE {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--ORANGE);
+        }
+        
+        .SECTION-SUMMARY.GREEN .SECTION-SUMMARY-TOTAL-VALUE { color: var(--GREEN); }
+        .SECTION-SUMMARY.RED .SECTION-SUMMARY-TOTAL-VALUE { color: var(--RED); }
+        .SECTION-SUMMARY.PURPLE .SECTION-SUMMARY-TOTAL-VALUE { color: var(--PURPLE); }
+
         /* NOTIFICATION */
         .NOTIF { 
             position: fixed; 
@@ -989,7 +1248,7 @@
             // 1. FETCH RIDERS
             const { data: riders } = await _SB.from('employees').select('id, name').eq('position', 'RIDER');
             GLOBAL_RIDERS = riders || [];
-            document.getElementById('P-RIDER').innerHTML = GLOBAL_RIDERS.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+            document.getElementById('P-RIDER').innerHTML = `<option value="SANDEEP-GOND">SANDEEP GOND</option>` + GLOBAL_RIDERS.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
 
             // 2. FETCH STAFFS
             const { data: staffs } = await _SB.from('staffs').select('name');
@@ -1011,14 +1270,17 @@
             (pays || []).forEach(p => tPay += parseFloat(p.amount));
             (tras || []).forEach(t => tTra += parseFloat(t.amount));
             
-            // RENDER GROUPED EXPENSES BY DATE
-            const expenseHtml = renderGroupedByDate(exps || [], 'expense');
+            // RENDER DETAILED EXPENSE CARDS
+            let expenseHtml = renderSectionSummary(exps, 'expense');
+            (exps || []).forEach(e => expenseHtml += renderExpenseCard(e));
             
-            // RENDER GROUPED PAYMENTS BY RIDER
-            const paymentHtml = renderGroupedByRider(pays || []);
+            // RENDER DETAILED PAYMENT CARDS
+            let paymentHtml = renderSectionSummary(pays, 'payment');
+            (pays || []).forEach(p => paymentHtml += renderPaymentCard(p));
             
-            // RENDER GROUPED TRANSFERS BY DATE
-            const transferHtml = renderGroupedByDate(tras || [], 'transfer');
+            // RENDER DETAILED TRANSFER CARDS
+            let transferHtml = renderSectionSummary(tras, 'transfer');
+            (tras || []).forEach(t => transferHtml += renderTransferCard(t));
 
             document.getElementById('L-EXP').innerHTML = expenseHtml || renderEmptyState('NO EXPENSES LOGGED YET');
             document.getElementById('L-PAY').innerHTML = paymentHtml || renderEmptyState('NO PAYMENTS LOGGED YET');
@@ -1222,20 +1484,211 @@
             return date.toLocaleDateString('en-IN', options).toUpperCase();
         }
 
-        function renderLog(item, title, colorClass, subTitleOverride, icon = '📄') {
-            let tableName = 'expenses';
-            if(colorClass === 'GREEN') { tableName = 'rider_payments'; }
-            if(colorClass === 'PURPLE') { tableName = 'money_transfers'; }
-
-            return `<div class="LOG-ITEM">
-                <div class="LOG-ITEM-LEFT ${colorClass}">${icon}</div>
-                <div class="LOG-ITEM-CENTER">
-                    <div class="LOG-MAIN">${title}</div>
-                    <div class="LOG-SUB">${subTitleOverride || formatDate(item.date)}${item.notes ? ' • ' + item.notes.substring(0, 20) + (item.notes.length > 20 ? '...' : '') : ''}</div>
+        // RENDER DETAILED EXPENSE CARD
+        function renderExpenseCard(item) {
+            const categoryIcons = {
+                'FUEL': '⛽',
+                'MAINTENANCE': '🔧',
+                'SALARY': '💰',
+                'RENT': '🏠',
+                'RAW MATERIAL': '📦',
+                'OTHER': '📋'
+            };
+            const icon = categoryIcons[item.category] || '📋';
+            
+            return `<div class="DETAIL-CARD RED">
+                <div class="DETAIL-CARD-HEADER">
+                    <div class="DETAIL-CARD-TYPE">
+                        <div class="DETAIL-CARD-ICON RED">${icon}</div>
+                        <div>
+                            <div class="DETAIL-CARD-TITLE">EXPENSE - ${item.category}</div>
+                            <div class="DETAIL-CARD-SUBTITLE">LOGGED BY: ${item.manager_name || 'MANAGER'}</div>
+                        </div>
+                    </div>
+                    <div class="DETAIL-CARD-AMOUNT">
+                        <div class="DETAIL-CARD-AMOUNT-LABEL">AMOUNT SPENT</div>
+                        <div class="DETAIL-CARD-AMOUNT-VALUE RED">₹${parseFloat(item.amount).toLocaleString()}</div>
+                    </div>
                 </div>
-                <div class="LOG-ITEM-RIGHT">
-                    <div class="LOG-AMT ${colorClass}">₹${parseFloat(item.amount).toLocaleString()}</div>
-                    <div class="LOG-DELETE" onclick="DELETE_REC('${tableName}', ${item.id})">DELETE</div>
+                <div class="DETAIL-CARD-BODY">
+                    <div class="DETAIL-CARD-FIELD">
+                        <div class="DETAIL-CARD-FIELD-LABEL">
+                            <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11zM9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>
+                            DATE
+                        </div>
+                        <div class="DETAIL-CARD-FIELD-VALUE">${formatDateFull(item.date)}</div>
+                    </div>
+                    <div class="DETAIL-CARD-FIELD">
+                        <div class="DETAIL-CARD-FIELD-LABEL">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                            CATEGORY
+                        </div>
+                        <div class="DETAIL-CARD-FIELD-VALUE">${item.category}</div>
+                    </div>
+                    <div class="DETAIL-CARD-FIELD FULL">
+                        <div class="DETAIL-CARD-FIELD-LABEL">
+                            <svg viewBox="0 0 24 24"><path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"/></svg>
+                            NOTES / REMARKS
+                        </div>
+                        <div class="DETAIL-CARD-FIELD-VALUE ${item.notes ? '' : 'EMPTY'}">${item.notes || 'NO NOTES ADDED'}</div>
+                    </div>
+                </div>
+                <div class="DETAIL-CARD-FOOTER">
+                    <div class="DETAIL-CARD-ID">RECORD #${item.id}</div>
+                    <button class="DETAIL-CARD-DELETE" onclick="DELETE_REC('expenses', ${item.id})">
+                        <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                        DELETE
+                    </button>
+                </div>
+            </div>`;
+        }
+
+        // RENDER DETAILED PAYMENT CARD
+        function renderPaymentCard(item) {
+            const riderName = GLOBAL_RIDERS.find(r => r.id == item.rider_id)?.name || 'UNKNOWN RIDER';
+            
+            return `<div class="DETAIL-CARD GREEN">
+                <div class="DETAIL-CARD-HEADER">
+                    <div class="DETAIL-CARD-TYPE">
+                        <div class="DETAIL-CARD-ICON GREEN">👤</div>
+                        <div>
+                            <div class="DETAIL-CARD-TITLE">PAYMENT FROM RIDER</div>
+                            <div class="DETAIL-CARD-SUBTITLE">${riderName}</div>
+                        </div>
+                    </div>
+                    <div class="DETAIL-CARD-AMOUNT">
+                        <div class="DETAIL-CARD-AMOUNT-LABEL">AMOUNT PAID</div>
+                        <div class="DETAIL-CARD-AMOUNT-VALUE GREEN">₹${parseFloat(item.amount).toLocaleString()}</div>
+                    </div>
+                </div>
+                <div class="DETAIL-CARD-BODY">
+                    <div class="DETAIL-CARD-FIELD">
+                        <div class="DETAIL-CARD-FIELD-LABEL">
+                            <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11zM9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>
+                            DATE
+                        </div>
+                        <div class="DETAIL-CARD-FIELD-VALUE">${formatDateFull(item.date)}</div>
+                    </div>
+                    <div class="DETAIL-CARD-FIELD">
+                        <div class="DETAIL-CARD-FIELD-LABEL">
+                            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            RIDER NAME
+                        </div>
+                        <div class="DETAIL-CARD-FIELD-VALUE">${riderName}</div>
+                    </div>
+                    <div class="DETAIL-CARD-FIELD FULL">
+                        <div class="DETAIL-CARD-FIELD-LABEL">
+                            <svg viewBox="0 0 24 24"><path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"/></svg>
+                            NOTES / REMARKS
+                        </div>
+                        <div class="DETAIL-CARD-FIELD-VALUE ${item.notes ? '' : 'EMPTY'}">${item.notes || 'NO NOTES ADDED'}</div>
+                    </div>
+                </div>
+                <div class="DETAIL-CARD-FOOTER">
+                    <div class="DETAIL-CARD-ID">RECORD #${item.id}</div>
+                    <button class="DETAIL-CARD-DELETE" onclick="DELETE_REC('rider_payments', ${item.id})">
+                        <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                        DELETE
+                    </button>
+                </div>
+            </div>`;
+        }
+
+        // RENDER DETAILED TRANSFER CARD
+        function renderTransferCard(item) {
+            return `<div class="DETAIL-CARD PURPLE">
+                <div class="DETAIL-CARD-HEADER">
+                    <div class="DETAIL-CARD-TYPE">
+                        <div class="DETAIL-CARD-ICON PURPLE">💸</div>
+                        <div>
+                            <div class="DETAIL-CARD-TITLE">MONEY TRANSFER</div>
+                            <div class="DETAIL-CARD-SUBTITLE">${item.transfer_from} → ${item.transfer_to}</div>
+                        </div>
+                    </div>
+                    <div class="DETAIL-CARD-AMOUNT">
+                        <div class="DETAIL-CARD-AMOUNT-LABEL">AMOUNT TRANSFERRED</div>
+                        <div class="DETAIL-CARD-AMOUNT-VALUE PURPLE">₹${parseFloat(item.amount).toLocaleString()}</div>
+                    </div>
+                </div>
+                <div class="DETAIL-CARD-BODY">
+                    <div class="DETAIL-CARD-FIELD">
+                        <div class="DETAIL-CARD-FIELD-LABEL">
+                            <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11zM9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>
+                            DATE
+                        </div>
+                        <div class="DETAIL-CARD-FIELD-VALUE">${formatDateFull(item.date)}</div>
+                    </div>
+                    <div class="DETAIL-CARD-FIELD">
+                        <div class="DETAIL-CARD-FIELD-LABEL">
+                            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            FROM (STAFF)
+                        </div>
+                        <div class="DETAIL-CARD-FIELD-VALUE">${item.transfer_from}</div>
+                    </div>
+                    <div class="DETAIL-CARD-FIELD">
+                        <div class="DETAIL-CARD-FIELD-LABEL">
+                            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            TO (OWNER)
+                        </div>
+                        <div class="DETAIL-CARD-FIELD-VALUE">${item.transfer_to}</div>
+                    </div>
+                    <div class="DETAIL-CARD-FIELD">
+                        <div class="DETAIL-CARD-FIELD-LABEL">
+                            <svg viewBox="0 0 24 24"><path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"/></svg>
+                            NOTES
+                        </div>
+                        <div class="DETAIL-CARD-FIELD-VALUE ${item.notes ? '' : 'EMPTY'}">${item.notes || 'NO NOTES'}</div>
+                    </div>
+                </div>
+                <div class="DETAIL-CARD-FOOTER">
+                    <div class="DETAIL-CARD-ID">RECORD #${item.id}</div>
+                    <button class="DETAIL-CARD-DELETE" onclick="DELETE_REC('money_transfers', ${item.id})">
+                        <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                        DELETE
+                    </button>
+                </div>
+            </div>`;
+        }
+
+        // FULL DATE FORMAT FOR BETTER READABILITY
+        function formatDateFull(dateStr) {
+            const date = new Date(dateStr);
+            const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            return date.toLocaleDateString('en-IN', options).toUpperCase();
+        }
+
+        // RENDER SECTION SUMMARY
+        function renderSectionSummary(items, type) {
+            if(!items || items.length === 0) return '';
+            
+            const total = items.reduce((sum, item) => sum + parseFloat(item.amount), 0);
+            
+            let colorClass = '', icon = '', label = '';
+            if(type === 'expense') {
+                colorClass = 'RED';
+                icon = '<svg viewBox="0 0 24 24"><path d="M15 3H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V9l-6-6zm-1 11h-2v2h-2v-2H8v-2h2v-2h2v2h2v2zm-2-6V4.5l5.5 5.5H12z"/></svg>';
+                label = 'TOTAL EXPENSES';
+            } else if(type === 'payment') {
+                colorClass = 'GREEN';
+                icon = '<svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>';
+                label = 'TOTAL PAYMENTS';
+            } else {
+                colorClass = 'PURPLE';
+                icon = '<svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>';
+                label = 'TOTAL TRANSFERS';
+            }
+            
+            return `<div class="SECTION-SUMMARY ${colorClass}">
+                <div class="SECTION-SUMMARY-LEFT">
+                    <div class="SECTION-SUMMARY-ICON">${icon}</div>
+                    <div>
+                        <div class="SECTION-SUMMARY-TEXT">${label}</div>
+                        <div class="SECTION-SUMMARY-COUNT">${items.length} RECORD${items.length > 1 ? 'S' : ''} FOUND</div>
+                    </div>
+                </div>
+                <div class="SECTION-SUMMARY-TOTAL">
+                    <div class="SECTION-SUMMARY-TOTAL-LABEL">GRAND TOTAL</div>
+                    <div class="SECTION-SUMMARY-TOTAL-VALUE">₹${total.toLocaleString()}</div>
                 </div>
             </div>`;
         }
